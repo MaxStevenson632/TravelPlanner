@@ -1,0 +1,29 @@
+services:
+
+  db:
+
+    # Lightweight Linux footprint, quicker deployment times
+    image: postgres:16-alpine
+    restart: unless-stopped
+    shm_size: 128mb
+
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+
+    ports:
+      # Map port 5432 in docker container to port 5432 in localhost
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - travelplanner-network
+
+volumes:
+  # Containers are volatile. If container stopped/ deleted the data within DB can be recovered using computer
+  postgres_data:
+networks:
+  travelplanner-network:
