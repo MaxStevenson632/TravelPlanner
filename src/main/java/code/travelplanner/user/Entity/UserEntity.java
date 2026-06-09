@@ -18,7 +18,7 @@ public class UserEntity {
     private String email;
     private String password;
 
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "user")
     private List<TripMembersEntity> tripMembers = new ArrayList<>();
 
     public UserEntity() {}
