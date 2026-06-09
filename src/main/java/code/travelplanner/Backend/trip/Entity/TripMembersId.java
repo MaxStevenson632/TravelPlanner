@@ -1,4 +1,4 @@
-package code.travelplanner.trip.Entity;
+package code.travelplanner.Backend.trip.Entity;
 
 import jakarta.persistence.Embeddable;
 
