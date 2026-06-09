@@ -15,6 +15,6 @@ public class WaypointEntity {
     private double longitude;
 
     @ManyToOne
-    @JoinColumn(name = "trip_id", referencedColumnName = "tripId", nullable = false)
+    @JoinColumn(name = "trip_id", referencedColumnName = "trip_id", nullable = false)
     private TripEntity trip;
 }
