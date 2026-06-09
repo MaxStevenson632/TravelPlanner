@@ -1,6 +1,6 @@
-package code.travelplanner.trip.Repository;
+package code.travelplanner.Backend.trip.Repository;
 
-import code.travelplanner.trip.Entity.TripEntity;
+import code.travelplanner.Backend.trip.Entity.TripEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TripRepository extends JpaRepository<TripEntity, Long> {

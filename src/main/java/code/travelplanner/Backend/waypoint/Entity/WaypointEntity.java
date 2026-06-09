@@ -1,6 +1,6 @@
-package code.travelplanner.waypoint.Entity;
+package code.travelplanner.Backend.waypoint.Entity;
 
-import code.travelplanner.trip.Entity.TripEntity;
+import code.travelplanner.Backend.trip.Entity.TripEntity;
 import jakarta.persistence.*;
 
 @Entity

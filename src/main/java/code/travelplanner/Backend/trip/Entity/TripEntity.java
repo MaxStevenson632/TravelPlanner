@@ -1,6 +1,6 @@
-package code.travelplanner.trip.Entity;
+package code.travelplanner.Backend.trip.Entity;
 
-import code.travelplanner.waypoint.Entity.WaypointEntity;
+import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

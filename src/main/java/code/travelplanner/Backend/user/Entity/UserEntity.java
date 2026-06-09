@@ -1,6 +1,6 @@
-package code.travelplanner.user.Entity;
+package code.travelplanner.Backend.user.Entity;
 
-import code.travelplanner.trip.Entity.TripMembersEntity;
+import code.travelplanner.Backend.trip.Entity.TripMembersEntity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
