@@ -62,5 +62,20 @@ public class SecurityConfiguration {
 
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        // Allow backend to talk to front end
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:63342"));
+        // Allow certain actions for the frontend
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        // Tell browser it is safe to pass session cookies between these ports
+        corsConfiguration.setAllowCredentials(true);
 
+        // Allow these CORS rules to every single URL path in the system
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
 }
