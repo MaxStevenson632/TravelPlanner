@@ -5,13 +5,11 @@ import code.travelplanner.Backend.user.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/travelplanner")
+@CrossOrigin(origins = "http://localhost:63342", allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
@@ -20,7 +18,9 @@ public class UserController {
     public UserController(UserService userService) { this.userService = userService; }
 
     @PostMapping("/register")
-    public void registerUser(@RequestBody UserRegisterDto newUserData) {
+    public ResponseEntity<String> registerUser(@RequestBody UserRegisterDto newUserData) {
         userService.registerNewUser(newUserData);
+        // Return a 201 Created status code
+        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Registration successful!\"}");
     }
 }
