@@ -19,8 +19,13 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerNewUser(UserRegisterDto userRegistrationData) {
-        System.out.println("Method using");
+    public boolean registerNewUser(UserRegisterDto userRegistrationData) {
+
+        // If email already exists
+        if (userRepository.findByEmail(userRegistrationData.getEmail()) != null) {
+            return false;
+        }
+
         // New row in DB
         UserEntity user = new UserEntity();
         user.setName(userRegistrationData.getUsername());
@@ -30,9 +35,7 @@ public class UserService {
 
         user.setEmail(userRegistrationData.getEmail());
         userRepository.save(user);
-        System.out.println("Entered");
+        return true;
+
     }
-
-
-
 }
