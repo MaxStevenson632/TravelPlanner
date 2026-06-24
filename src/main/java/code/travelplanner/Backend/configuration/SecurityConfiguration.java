@@ -36,15 +36,7 @@ public class SecurityConfiguration {
         http.formLogin(form -> form
                 // Unauthenticated users redirected to my custom /login page, not Spring security's version
                 .loginPage("/login")
-                .loginProcessingUrl("/travelplanner/login")
-                .successHandler((request, response, authentication) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    response.getWriter().write("{\"message\": \"Login successful!\"}");
-                })
-                .failureHandler((request, response, exception) -> {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("{\"error\": \"Invalid credentials\"}");
-                })
+                .defaultSuccessUrl("/home")
                 .permitAll());
 
         http.logout(logout -> logout
@@ -59,7 +51,6 @@ public class SecurityConfiguration {
         http.csrf(csrf -> csrf.disable());
 
         return http.build();
-
     }
 
     @Bean
