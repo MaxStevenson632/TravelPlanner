@@ -1,5 +1,6 @@
 package code.travelplanner.Backend.user.Service;
 
+import code.travelplanner.Backend.user.Dto.UserLoginDto;
 import code.travelplanner.Backend.user.Dto.UserRegisterDto;
 import code.travelplanner.Backend.user.Entity.UserEntity;
 import code.travelplanner.Backend.user.Repository.UserRepository;
@@ -22,7 +23,7 @@ public class UserService {
     public boolean registerNewUser(UserRegisterDto userRegistrationData) {
 
         // If email already exists
-        if (userRepository.findByEmail(userRegistrationData.getEmail()) != null) {
+        if (userRepository.findByEmail(userRegistrationData.getEmail()).isPresent()) {
             return false;
         }
 
