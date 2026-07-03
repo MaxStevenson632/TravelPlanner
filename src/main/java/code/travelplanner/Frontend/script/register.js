@@ -25,19 +25,20 @@ async function registerAccount() {
                     "content-type": "application/json; charset=UTF-8"
                 }
             })
-                .then((response) => response.json())
-                .then((json) => console.log(json));
+
+            if (response.ok) {
+                const data = await response.json();
+                // Redirect to /home page after successful login
+                console.log("Registration successful");
+                window.location.href = "./login.html";
+
+            } else {
+                alert("Email already associated with an account");
+            }
 
         } catch (error) {
             console.log("Error creating account", error);
         }
-
-        //if (response.status === 21) {
-         //   console.log("User added succesfully");
-        //    //window.location.href = "welcome.html";
-        //} else {
-       //     console.error("Registration failed");
-       // }
 
     } else {
         console.log("Password not the same");
