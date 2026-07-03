@@ -6,11 +6,11 @@ import code.travelplanner.Backend.user.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/travelplanner")
@@ -18,37 +18,41 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserController(UserService userService, AuthenticationManager authenticationManager) {
+    public UserController(UserService userService) {
 
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegisterDto newUserData) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegisterDto newUserData) {
+        try {
+            userService.registerNewUser(newUserData);
 
-        userService.registerNewUser(newUserData);
-        // Return a 201 Created status code
-        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Registration successful!\"}");
+            // Return a 201 Created status code
+            return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Registration successful!\"}");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserLoginDto loginUserData) {
+    public ResponseEntity<?> loginUser(@RequestBody UserLoginDto loginUserData) {
 
-        // Wrap the raw credentials into a standard Spring token
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(loginUserData.getEmail(), loginUserData.getPassword());
-
-        // Hand the token to the authentication manager
-        // This will send it to the DaoAuthenticationProvider in SecurityConfiguration
-        Authentication authentication = authenticationManager.authenticate(token);
-
-        // Store authenticated user sessions in security context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("{\"message\": \"Login successful!\"}");
+        try {
+            // Delegate all authentication logic to the service layer
+            userService.authenticateUser(loginUserData);
+            return ResponseEntity.ok(Map.of("message", "Login successful!"));
+        } catch (DisabledException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message",
+                    "Please verify your account via email before logging in."));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message",
+                    "Invalid email or password."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message",
+                    e.getMessage()));
+        }
     }
 }
