@@ -18,7 +18,6 @@ async function loginToAccount() {
         })
 
         if (response.ok) {
-
             // Parse raw data into JSON object
             const data = await response.json();
             console.log("Login successful");
@@ -26,7 +25,9 @@ async function loginToAccount() {
             window.location.href = "./home.html";
 
         } else {
-            alert("Invalid email or password");
+            const errorData = await response.json();
+            console.log(errorData);
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
         }
 
     } catch (error) {
