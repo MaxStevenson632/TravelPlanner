@@ -14,9 +14,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private long userId;
+    @Column(nullable = false)
     private String name;
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
+    @Column(name = "account_enabled")
+    private boolean accountEnabled;
 
     @OneToMany(mappedBy = "user")
     private List<TripMembersEntity> tripMembers = new ArrayList<>();
@@ -28,6 +33,7 @@ public class UserEntity {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.accountEnabled = false;
     }
 
     public long getUserId() { return this.userId; }
@@ -41,5 +47,8 @@ public class UserEntity {
 
     public String getPassword() { return this.password; }
     public void setPassword(String password) { this.password = password; }
+
+    public boolean getAccountEnabled() { return this.accountEnabled; }
+    public void setAccountEnabled(boolean accountEnabled) { this.accountEnabled = accountEnabled; }
 
 }
