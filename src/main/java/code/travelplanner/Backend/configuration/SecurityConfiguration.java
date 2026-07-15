@@ -46,7 +46,9 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(auth -> auth
                 // Anybody can see /register, /login pages as well as load any styling files
-                .requestMatchers("/travelplanner/register", "/travelplanner/login", "/travelplanner/verify", "/css/**").permitAll()
+                .requestMatchers("/travelplanner/register", "/travelplanner/login", "/travelplanner/verify", "/css/**", "/js/**", "/error").permitAll()
+                // Logged-in users can access the following endpoints
+                .requestMatchers("/travelplanner/createTrip").authenticated()
                 // Any other URL is blocked unless user has logged in successfully
                 .anyRequest().authenticated());
 
