@@ -5,14 +5,49 @@
 <head>
 
     <meta charset="UTF-8">
-    <link rel = "stylesheet" href = "../style/style.css">
-    <script src = "../script/login.js" defer> </script>
+    <link rel = "stylesheet" href = "../style/home.css">
+    <script src = "../script/home.js" defer> </script>
 
 </head>
 
 <body>
 
-<h1> Hello </h1>
+<div id="mapContainer" style = "position: relative; width: 66.66%; height: 100vh;">
+    <div id = "map" style = "width:100%; height: 100%"></div>
+
+    <button id="addTripBtn"> Create New Trip! </button>
+
+    <div id = "tripFormContainer" class = "hidden">
+        <h2> Create New Trip </h2>
+        <form id = "tripForm">
+            <div class = "formGroup">
+                <label for = "title"> Trip Title: </label>
+                <input type = "text" id = "title" required placeholder = "e.g. London to Berlin 2026">
+            </div>
+
+            <div class = "formGroup">
+                <label for="waypoints"> Waypoints (comma separated): </label>
+                <input type = "text" id = "waypoints" placeholder = "e.g. London, Paris, Berlin">
+            </div>
+
+            <div class = "formRow">
+                <div class = formGroup>
+                    <label for = "startDate"> Start Date: </label>
+                    <input type = "date" id = "startDate" required>
+                </div>
+                <div class = "formGroup">
+                    <label for = "endDate"> End Date: </label>
+                    <input type = "date" id = "endDate" required>
+                </div>
+            </div>
+
+            <div class = "formActions">
+                <button type = "submit" id = "saveTripBtn"> Create Trip </button>
+                <button type = "button" id = "cancelTripBtn"> Cancel Trip </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 
 </body>
