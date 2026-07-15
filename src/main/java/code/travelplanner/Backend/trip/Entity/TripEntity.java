@@ -1,5 +1,6 @@
 package code.travelplanner.Backend.trip.Entity;
 
+import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
 import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import jakarta.persistence.*;
 
@@ -20,9 +21,6 @@ public class TripEntity {
     private LocalDate startDate;
     @Column(name = "end_date")
     private LocalDate endDate;
-
-    @OneToMany(mappedBy = "trip")
-    private List<TripMembersEntity> tripMembers = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
     private List<WaypointEntity> waypoints = new ArrayList<>();
