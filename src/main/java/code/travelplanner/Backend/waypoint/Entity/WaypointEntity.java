@@ -13,8 +13,30 @@ public class WaypointEntity {
     private long waypointId;
     private double latitude;
     private double longitude;
+    @Column(name = "name")
+    private String placeName;
 
     @ManyToOne
     @JoinColumn(name = "trip_id", referencedColumnName = "trip_id", nullable = false)
     private TripEntity trip;
+
+    public WaypointEntity() {}
+
+    public WaypointEntity(double latitude, double longitude, String placeName) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.placeName = placeName;
+    }
+
+    public long getWaypointId() { return this.waypointId; }
+    public  void setWaypointId(long waypointId) { this.waypointId = waypointId; }
+
+    public double getLatitude() { return this.latitude; }
+    public  void setLatitude(double latitude) { this.latitude = latitude; }
+
+    public double getLongitude() { return this.longitude; }
+    public  void setLongitude(double longitude) { this.longitude = longitude; }
+
+    public String getPlaceName() { return this.placeName; }
+    public  void setPlaceName(String placeName) { this.placeName = placeName; }
 }
