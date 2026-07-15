@@ -1,6 +1,6 @@
 package code.travelplanner.Backend.user.Entity;
 
-import code.travelplanner.Backend.trip.Entity.TripMembersEntity;
+import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -22,9 +22,6 @@ public class UserEntity {
     private String password;
     @Column(name = "account_enabled")
     private boolean accountEnabled;
-
-    @OneToMany(mappedBy = "user")
-    private List<TripMembersEntity> tripMembers = new ArrayList<>();
 
     public UserEntity() {}
 
