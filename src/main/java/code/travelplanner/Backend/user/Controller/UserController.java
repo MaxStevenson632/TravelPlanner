@@ -1,5 +1,6 @@
 package code.travelplanner.Backend.user.Controller;
 
+import code.travelplanner.Backend.user.Dto.LoginResponseTokenDto;
 import code.travelplanner.Backend.user.Dto.UserLoginDto;
 import code.travelplanner.Backend.user.Dto.UserRegisterDto;
 import code.travelplanner.Backend.user.Service.UserService;
@@ -42,8 +43,8 @@ public class UserController {
 
         try {
             // Delegate all authentication logic to the service layer
-            userService.authenticateUser(loginUserData);
-            return ResponseEntity.ok(Map.of("message", "Login successful!"));
+            String token = userService.authenticateUser(loginUserData);
+            return ResponseEntity.ok(new LoginResponseTokenDto(token));
         } catch (DisabledException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message",
                     "Please verify your account via email before logging in."));
