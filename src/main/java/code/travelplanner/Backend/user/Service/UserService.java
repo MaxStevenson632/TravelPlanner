@@ -26,15 +26,18 @@ public class UserService {
     private final EmailService emailService;
     private final VerificationService verificationService;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService,
-                       VerificationService verificationService,  AuthenticationManager authenticationManager) {
+                       VerificationService verificationService,  AuthenticationManager authenticationManager,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.verificationService = verificationService;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Transactional
@@ -68,7 +71,7 @@ public class UserService {
         return true;
     }
 
-    public void authenticateUser (UserLoginDto loginUserData) {
+    public String authenticateUser (UserLoginDto loginUserData) {
 
         // If email doesn't exist throw error, findByEmail requires Optional
         UserEntity user = userRepository.findByEmail(loginUserData.getEmail())
@@ -88,7 +91,7 @@ public class UserService {
         // This will send it to the DaoAuthenticationProvider in SecurityConfiguration
         Authentication authentication = authenticationManager.authenticate(token);
 
-        // Store authenticated user sessions in security context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // Generate JWT
+        return jwtService.generateToken(user.getUserId());
     }
 }
