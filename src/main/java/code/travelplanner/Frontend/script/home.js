@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const waypoints = waypointsArray;
         const startDate = document.getElementById("startDate").value;
         const endDate = document.getElementById("endDate").value;
+        const token = localStorage.getItem("token");
 
         try {
             const response = await fetch("http://localhost:8080/travelplanner/createTrip",  {
@@ -42,13 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }),
                 credentials: 'include',
                 headers: {
-                    "content-type": "application/json; charset=UTF-8"
+                    "content-type": "application/json; charset=UTF-8",
+                    "Authorization": `Bearer ${token}`
                 }
             })
 
 
         } catch (e) {
-
+            const errorData = await response.json();
+            console.log(errorData);
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
         }
 
 
