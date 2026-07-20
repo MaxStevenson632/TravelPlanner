@@ -22,9 +22,6 @@ public class TripEntity {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trip")
-    private List<WaypointEntity> waypoints = new ArrayList<>();
-
     public TripEntity() {}
 
     public TripEntity(String title, LocalDate startDate, LocalDate endDate) {
