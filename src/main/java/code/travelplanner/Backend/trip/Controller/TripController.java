@@ -2,6 +2,8 @@ package code.travelplanner.Backend.trip.Controller;
 
 import code.travelplanner.Backend.trip.Dto.NewTripDto;
 import code.travelplanner.Backend.trip.Service.TripService;
+import code.travelplanner.Backend.user.Entity.UserEntity;
+import code.travelplanner.Backend.user.Repository.UserRepository;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,25 +24,24 @@ public class TripController {
 
     private final TripService tripService;
     private final WaypointService waypointService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TripController(TripService tripService,  WaypointService waypointService) {
+    public TripController(TripService tripService,  WaypointService waypointService,  UserRepository userRepository) {
         this.tripService = tripService;
         this.waypointService = waypointService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/createTrip")
-    public ResponseEntity<?> addNewTrip(@RequestBody NewTripDto newTripData, @AuthenticationPrincipal UserDetails loggedInUser) {
+    public ResponseEntity<?> addNewTrip(@RequestBody NewTripDto newTripData, @AuthenticationPrincipal Long userId) {
 
         // loggedInUser populated automatically by Spring
-        if (loggedInUser == null) {
+        if (userId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You must be logged in.");
         }
 
-        // Extract the username in the cookie
-        String userEmail = loggedInUser.getUsername();
-
-        tripService.createTrip(newTripData, userEmail);
+        tripService.createTrip(newTripData, userId);
 
         return ResponseEntity.ok().build();
     }
