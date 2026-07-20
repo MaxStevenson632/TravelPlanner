@@ -13,13 +13,14 @@ async function loginToAccount() {
             }),
             credentials: 'include',
             headers: {
-                "content-type": "application/json; charset=UTF-8"
+                "content-type": "application/json; charset=UTF-8",
             }
         })
 
         if (response.ok) {
             // Parse raw data into JSON object
             const data = await response.json();
+            localStorage.setItem("token", data.token);
             console.log("Login successful");
             // Redirect to /home page after successful login
             window.location.href = "./home.html";
