@@ -28,18 +28,12 @@ public class TripService {
     }
 
     @Transactional
-    public ResponseEntity<?> createTrip (NewTripDto newTripData, String userEmail) {
+    public ResponseEntity<?> createTrip (NewTripDto newTripData, Long userId) {
 
         TripEntity tripEntity = new TripEntity(newTripData.getTitle(),
                 newTripData.getStartDate(), newTripData.getEndDate());
         tripRepository.save(tripEntity);
-
-        UserEntity user = userRepository.findByEmail(userEmail)
-                        .orElseThrow(() -> new RuntimeException("User not found"));
-        Long userId = user.getUserId();
-
         tripMembersService.createOwner(tripEntity.getTripId(), userId);
-
         waypointService.addWaypoint(newTripData.getWaypoints(), tripEntity.getTripId());
 
         return  ResponseEntity.ok().build();
