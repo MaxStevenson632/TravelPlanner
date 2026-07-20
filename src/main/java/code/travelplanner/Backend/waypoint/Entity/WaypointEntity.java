@@ -11,14 +11,12 @@ public class WaypointEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "waypoint_id")
     private long waypointId;
+    @Column(name = "latitude", precision = 10)
     private double latitude;
+    @Column(name = "longitude", precision = 10)
     private double longitude;
     @Column(name = "name")
     private String placeName;
-
-    @ManyToOne
-    @JoinColumn(name = "trip_id", referencedColumnName = "trip_id", nullable = false)
-    private TripEntity trip;
 
     public WaypointEntity() {}
 
