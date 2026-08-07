@@ -1,21 +1,19 @@
 package code.travelplanner.Backend.trip.Controller;
 
 import code.travelplanner.Backend.trip.Dto.NewTripDto;
+import code.travelplanner.Backend.trip.Dto.TripMapDto;
+import code.travelplanner.Backend.trip.Dto.TripOverviewsDto;
+import code.travelplanner.Backend.trip.Dto.TripOverviewsListDto;
 import code.travelplanner.Backend.trip.Service.TripService;
-import code.travelplanner.Backend.user.Entity.UserEntity;
 import code.travelplanner.Backend.user.Repository.UserRepository;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/travelplanner")
 @Controller
@@ -44,5 +42,17 @@ public class TripController {
         tripService.createTrip(newTripData, userId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{tripId}/map-data")
+    public ResponseEntity<TripMapDto> getWaypointData(@PathVariable Long tripId, @AuthenticationPrincipal Long userId) {
+
+        return ResponseEntity.ok(tripService.getTripMapData(tripId, userId));
+    }
+
+    @GetMapping("/retrieve-trips")
+    public ResponseEntity<TripOverviewsListDto> getTripData(@AuthenticationPrincipal long userId) {
+
+        return ResponseEntity.ok(tripService.getTripOverviewsData(userId));
     }
 }
