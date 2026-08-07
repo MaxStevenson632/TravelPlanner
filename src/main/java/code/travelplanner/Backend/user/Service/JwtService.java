@@ -22,9 +22,10 @@ public class JwtService {
 
     /* Generate token
     * Done when user logs in */
-    public String generateToken (Long userId) {
+    public String generateToken (Long userId, String username) {
         return Jwts.builder()
                 .subject(String.valueOf(userId)) // Who has logged in
+                .claim("name", username) // Custom claim - name to pass along with token
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(getSigningKey()) // Sign with secret key
