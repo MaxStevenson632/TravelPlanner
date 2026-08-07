@@ -92,6 +92,6 @@ public class UserService {
         Authentication authentication = authenticationManager.authenticate(token);
 
         // Generate JWT
-        return jwtService.generateToken(user.getUserId());
+        return jwtService.generateToken(user.getUserId(), user.getName());
     }
 }
