@@ -5,16 +5,42 @@
 <head>
 
     <meta charset="UTF-8">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
+
     <link rel = "stylesheet" href = "../style/home.css">
     <script src = "../script/home.js" defer> </script>
+    <script src = "../script/Map/mapInit.js" defer></script>
+    <script src = "../script/Map/mapController.js" defer> </script>
+    <script src = "../script/Map/mapMarkers.js" defer> </script>
+    <script src = "../script/Map/mapNavigation.js" defer> </script>
 
 </head>
 
 <body>
 
-<div id="mapContainer" style = "position: relative; width: 66.66%; height: 100vh;">
-    <div id = "map" style = "width:100%; height: 100%"></div>
+<div id = "sideBarContainer">
+    <div class = "sidebarUserName" id = "sidebarUserName"></div>
 
+    <div id = "usernameHeader">
+    </div>
+
+    <div class = "tripsHeading">
+        <h3>Your trips</h3>
+        <button id = "addTripIconBtn" type = "button" aria-label = "Create new trip">+</button>
+    </div>
+
+    <ul id = "tripList">
+        <li class = "tripListLoading">Loading trips…</li>
+        <li class = "tripListItem"></li>
+    </ul>
+</div>
+
+<div id="mapContainer">
+    <div id = "map"></div>
+
+    <button id="renderMarkers"> Show markers </button>
     <button id="addTripBtn"> Create New Trip! </button>
 
     <div id = "tripFormContainer" class = "hidden">
