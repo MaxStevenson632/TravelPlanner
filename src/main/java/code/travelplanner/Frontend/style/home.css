@@ -1,48 +1,533 @@
-/* Container holding the map and absolute elements */
-#mapContainer {
+/* ---------- Google Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ---------- Design tokens ---------- */
+:root {
+    --teal:        #1a9ea0;
+    --teal-dark:   #157f81;
+    --teal-deeper: #0e5f61;
+    --gold:        #f1c56b;
+    --cream:       #f7f3e8;
+    --text-main:   #f8f5ed;
+    --text-muted:  #d8e7dc;
+    --card-bg:     rgba(255, 255, 255, 0.045);
+    --card-border: rgba(240, 242, 234, 0.14);
+    --radius-card: 0.75rem;
+    --radius-pill: 999px;
+}
+
+/* ---------- Global reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #0e5f61;
+}
+
+/* ---------- Sidebar ---------- */
+#sideBarContainer {
+    width: 33.33%;
+    height: 100vh;
+    background: var(--teal);
+    color: var(--text-main);
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
     position: relative;
 }
 
-/* Style for the trigger button at the bottom center of the map */
-#addTripBtn {
+/* Decorative rings */
+#sideBarContainer::before,
+#sideBarContainer::after {
+    content: "";
     position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000; /* Keeps it above the map layer */
-    padding: 12px 24px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: 1px solid rgba(218, 235, 220, 0.15);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+#sideBarContainer::before {
+    width: 19rem;
+    height: 19rem;
+    left: -10rem;
+    bottom: -9rem;
+}
+#sideBarContainer::after {
+    width: 8rem;
+    height: 8rem;
+    right: -4rem;
+    top: 5rem;
+    opacity: 0.75;
 }
 
-/* Form overlay configuration */
-#tripFormContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
+#sideBarContainer > * { position: relative; z-index: 1; }
+
+/* ---------- Profile eyebrow ---------- */
+.profileEyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin: 0 0 0.9rem;
+    color: var(--text-main);
+}
+
+.profileDot {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: var(--gold);
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* ---------- Username heading ---------- */
+.usernameHeader {
+    margin: 0 0 2.5rem;
+}
+
+.usernameHeader h1 {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: clamp(1.85rem, 3.5vw, 2.4rem);
+    line-height: 1.05;
+    color: var(--text-main);
+    margin: 0;
+    max-width: 9ch;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+/* ---------- Trips heading row ---------- */
+.tripsHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.tripsHeading h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-main);
+}
+
+/* ---------- Add-trip icon button ---------- */
+#addTripIconBtn {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(248, 245, 237, 0.3);
+    background: transparent;
+    color: var(--text-main);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+    padding: 0;
+}
+#addTripIconBtn:hover,
+#addTripIconBtn:focus-visible {
+    background: var(--gold);
+    color: #263a44;
+    border-color: var(--gold);
+    outline: none;
+}
+
+/* ---------- Trip list ---------- */
+#tripList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+/* ---------- Trip card ---------- */
+.tripListItem {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1rem 1rem 1.1rem;
+    border-radius: var(--radius-card);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    font-family: inherit;
+    font-size: inherit;
+}
+.tripListItem:hover,
+.tripListItem:focus-visible {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(241, 197, 107, 0.7);
+    outline: none;
+}
+.tripListItem.active,
+.tripListItem.is-selected {
+    background: var(--cream);
+    color: #1c3039;
+    border-color: var(--cream);
+    box-shadow: 0 10px 28px rgba(10, 20, 24, 0.18);
+}
+
+.tripTitle {
+    font-size: 0.95rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+/* ---------- Role badge ---------- */
+.roleBadge {
+    flex-shrink: 0;
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+    font-weight: 700;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    padding: 0.28rem 0.55rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* ---------- List states ---------- */
+.tripListLoading,
+.tripListEmpty,
+.tripListError {
+    opacity: 0.75;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
+/* ---------- Detail panel ---------- */
+.detail-panel {
+    display: none;
+    animation: detailIn 260ms ease both;
+}
+.detail-panel.is-visible { display: block; }
+
+@keyframes detailIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.back-button {
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.6rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+    transition: color 180ms ease;
+}
+.back-button:hover,
+.back-button:focus-visible {
+    color: var(--gold);
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+    border-radius: 0.2rem;
+}
+
+.detail-kicker {
+    margin: 0;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.detail-trip-name {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    line-height: 1.05;
+    margin: 0.45rem 0 0.5rem;
+    color: var(--text-main);
+}
+
+/* ---------- Detail tabs ---------- */
+.detail-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+    margin: 1.6rem 0 1.25rem;
+}
+
+.tab-button {
+    border: 1px solid rgba(248, 245, 237, 0.3);
+    background: transparent;
+    color: var(--text-main);
+    min-height: 2.7rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.55rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+.tab-button:hover,
+.tab-button:focus-visible {
+    border-color: var(--gold);
+    outline: none;
+}
+.tab-button.is-active {
+    background: var(--cream);
+    color: #263a44;
+    border-color: var(--cream);
+    font-weight: 700;
+}
+
+/* ---------- Tab views ---------- */
+.detail-view { display: none; }
+.detail-view.is-visible {
+    display: block;
+    animation: fadeUp 220ms ease both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Waypoint timeline ---------- */
+.waypoint-item {
+    display: grid;
+    grid-template-columns: 2.15rem minmax(0, 1fr);
+    gap: 0.8rem;
+}
+
+.waypoint-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.waypoint-dot {
+    width: 0.78rem;
+    height: 0.78rem;
+    background: var(--gold);
+    border: 3px solid var(--cream);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--gold);
+    margin-top: 0.25rem;
+    flex: 0 0 auto;
+}
+
+.waypoint-line {
+    width: 2px;
+    background: rgba(216, 231, 220, 0.42);
+    flex: 1;
+    min-height: 1rem;
+    margin: 0.35rem 0;
+}
+
+.waypoint-copy { padding-bottom: 0.65rem; }
+
+.waypoint-name {
+    margin: 0;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+.waypoint-note {
+    margin: 0.2rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.travel-time {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--gold);
+    padding: 0.2rem 0 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* ---------- People list ---------- */
+.people-list { display: grid; gap: 0.7rem; }
+
+.person-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid rgba(248, 245, 237, 0.16);
+    border-radius: 0.7rem;
+    background: rgba(255, 255, 255, 0.045);
+}
+
+.person-initials {
+    width: 2.35rem;
+    height: 2.35rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #75b49b;
+    color: #173038;
+    font-size: 0.74rem;
+    font-weight: 700;
+    flex: 0 0 auto;
+}
+
+.person-copy { min-width: 0; }
+
+.person-name {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.person-role {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-top: 0.1rem;
+}
+
+/* ---------- Sidebar footer ---------- */
+.sidebar-status {
+    margin-top: auto;
+    padding-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    opacity: 0.78;
+    position: relative;
+    z-index: 1;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ---------- Map container ---------- */
+#mapContainer {
+    position: relative;
+    width: 66.67%;
+    height: 100vh;
+    flex-shrink: 0;
+}
+
+#map {
     width: 100%;
     height: 100%;
-    background-color: #ffffff; /* White background covers the map */
-    z-index: 1001; /* Sits directly over the map and button */
-    padding: 40px;
-    box-sizing: border-box;
+}
+
+/* ---------- Floating add-trip button (on map) ---------- */
+#addTripBtn {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    padding: 0.75rem 1.5rem;
+    background: var(--gold);
+    color: #1c3039;
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    transition: background 180ms ease, transform 180ms ease;
+}
+#addTripBtn:hover,
+#addTripBtn:focus-visible {
+    background: #f5d285;
+    transform: translateX(-50%) translateY(-2px);
+    outline: none;
+}
+
+/* ---------- Trip form overlay ---------- */
+#tripFormContainer {
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    z-index: 1001;
+    padding: 2.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-y: auto;
 }
 
-/* Helper class to toggle visibility */
-.hidden {
-    display: none !important;
+/* ---------- Form helpers ---------- */
+.formGroup {
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
 }
 
-/* Quick styles for your form fields */
-.formGroup { margin-bottom: 20px; display: flex; flex-direction: column; }
-.formRow { display: flex; gap: 20px; }
+.formGroup label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #263a44;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.formRow {
+    display: flex;
+    gap: 1.25rem;
+}
+
 .formRow .formGroup { flex: 1; }
-input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+
+input {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid #ccc;
+    border-radius: 0.45rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 180ms ease;
+}
+input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26, 158, 160, 0.15);
+}
+
+/* ---------- Utility ---------- */
+.hidden { display: none !important; }
