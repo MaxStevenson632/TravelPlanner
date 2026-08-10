@@ -121,6 +121,7 @@ public class TripService {
                     TripOverviewsDto tripDataDto = new TripOverviewsDto();
                     tripDataDto.setName(tripEntity.getTitle());
                     tripDataDto.setRole(tripMember.getMemberRole());
+                    tripDataDto.setId(tripEntity.getTripId());
 
                     return tripDataDto;
                 })
