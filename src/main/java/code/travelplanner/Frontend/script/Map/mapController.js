@@ -1,28 +1,21 @@
+import { createMap } from './mapInit.js';
+import { getMapData } from '../tripService.js';
+import { addMarkers } from './mapMarkers.js';
+import { renderRouteBetweenTwoPoints } from './mapNavigation.js';
+
 let mapInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
     mapInstance = createMap();
+});
 
-    const tripList = document.getElementById("tripList");
+export function renderTripMarkersAndRouteOnMap(tripId) {
 
-    if (tripList) {
-        tripList.addEventListener("click", (event) => {
+            loadTripMarkersAndRoute(mapInstance, tripId);
+}
 
-            const clickedTrip = event.target.closest("li");
-
-            if (!clickedTrip || clickedTrip.classList.contains("tripListLoading")) {
-                return;
-            }
-
-            const tripId = clickedTrip.dataset.tripId;
-
-            loadTripMarkers(mapInstance, tripId);
-        })
-    }
-})
-
-async function loadTripMarkers(mapInstance, tripId) {
+async function loadTripMarkersAndRoute(mapInstance, tripId) {
 
     const tripData = await getMapData(tripId);
     const waypointsList = tripData.waypoints;
