@@ -12,9 +12,11 @@ import code.travelplanner.Backend.trip.Entity.TripEntity;
 import code.travelplanner.Backend.trip.Entity.TripPlacesEntity;
 import code.travelplanner.Backend.trip.Repository.TripPlacesRepository;
 import code.travelplanner.Backend.trip.Repository.TripRepository;
+import code.travelplanner.Backend.tripMembers.Dto.MemberInfoDto;
 import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
 import code.travelplanner.Backend.tripMembers.Repository.TripMembersRepository;
 import code.travelplanner.Backend.tripMembers.Service.TripMembersService;
+import code.travelplanner.Backend.user.Entity.UserEntity;
 import code.travelplanner.Backend.user.Repository.UserRepository;
 import code.travelplanner.Backend.waypoint.Dto.WaypointMapDto;
 import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
@@ -74,6 +76,9 @@ public class TripService {
         // List of ordered waypoints of this trip
         List<TripPlacesEntity> tripPlaces = tripPlacesRepository.findByTripIdOrderByVisitOrder(tripId);
 
+        // List of users who belong to the trip
+        List<TripMembersEntity> tripMembers = tripMembersRepository.findByIdTripId(tripId);
+
         // Map each TripPlacesEntity into a WaypointMapDto
         List<WaypointMapDto> waypointDtos = tripPlaces.stream()
                 .map(tripPlace -> {
@@ -94,12 +99,29 @@ public class TripService {
                 })
                 .toList();
 
+        // Map each user belonging to the trip into a MemberInfoDto
+        List<MemberInfoDto> memberDtos = tripMembers.stream()
+                .map(tripMember -> {
+
+                    UserEntity user = userRepository
+                            .findByUserId(tripMember.getId().getUserId())
+                            .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+                    MemberInfoDto memberInfoDto = new MemberInfoDto();
+                    memberInfoDto.setName(user.getName());
+                    memberInfoDto.setRole(tripMember.getMemberRole());
+
+                    return memberInfoDto;
+                })
+                .toList();
+
         // Wrap it all in TripMapDto
         TripMapDto mapData = new TripMapDto();
         mapData.setName(trip.getTitle());
         mapData.setStartDate(trip.getStartDate());
         mapData.setEndDate(trip.getEndDate());
         mapData.setWaypoints(waypointDtos);
+        mapData.setMembers(memberDtos);
 
         return mapData;
     }
