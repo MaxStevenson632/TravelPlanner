@@ -1,4 +1,4 @@
-function addMarkers(map, waypointsList) {
+export function addMarkers(map, waypointsList) {
 
     if (waypointsList.length === 0) {
         console.log("No waypoints found to add to map");
