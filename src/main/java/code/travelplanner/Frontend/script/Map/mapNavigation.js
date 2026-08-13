@@ -1,5 +1,4 @@
-
-async function renderRouteBetweenTwoPoints(longitudeA, latitudeA, longitudeB, latitudeB, map, routeSegmentId) {
+export async function renderRouteBetweenTwoPoints(longitudeA, latitudeA, longitudeB, latitudeB, map, routeSegmentId) {
 
     // Mapbox directions API URL
     const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${longitudeA},${latitudeA};${longitudeB},${latitudeB}?geometries=geojson&access_token=${MAPBOX_APIKEY}`;
