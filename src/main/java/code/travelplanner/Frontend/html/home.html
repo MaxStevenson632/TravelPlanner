@@ -10,11 +10,11 @@
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.2/mapbox-gl.js"></script>
 
     <link rel = "stylesheet" href = "../style/home.css">
-    <script src = "../script/home.js" defer> </script>
-    <script src = "../script/Map/mapInit.js" defer></script>
-    <script src = "../script/Map/mapController.js" defer> </script>
-    <script src = "../script/Map/mapMarkers.js" defer> </script>
-    <script src = "../script/Map/mapNavigation.js" defer> </script>
+    <script src = "../script/home.js" type = "module" defer> </script>
+    <script src = "../script/Map/mapInit.js" type = "module" defer></script>
+    <script src = "../script/Map/mapController.js" type = "module" defer> </script>
+    <script src = "../script/Map/mapMarkers.js" type = "module" defer> </script>
+    <script src = "../script/Map/mapNavigation.js" type = "module" defer> </script>
 
 </head>
 
@@ -35,6 +35,37 @@
         <li class = "tripListLoading">Loading trips…</li>
         <li class = "tripListItem"></li>
     </ul>
+
+    <div id="tripDetailPanel" class="detail-panel">
+        <button class="back-button" id="backToTripsBtn">← Back</button>
+        <p class="detail-kicker">Trip Details</p>
+        <h2 class="detail-trip-name" id="detailTripName">Loading...</h2>
+
+        <div class="detail-tabs">
+            <button class="tab-button is-active" data-target="viewWaypoints">Waypoints</button>
+            <button class="tab-button" data-target="viewPeople">People</button>
+        </div>
+
+        <div id="viewWaypoints" class="detail-view is-visible">
+            <div id="detailWaypointsList">
+            </div>
+
+            <button class="expandable-add-btn" id="addWaypointBtn">
+                <span class="icon">+</span>
+                <span class="text">Add Waypoint</span>
+            </button>
+        </div>
+
+        <div id="viewPeople" class="detail-view">
+            <div class="people-list" id="detailPeopleList">
+            </div>
+
+            <button class="expandable-add-btn" id="addPersonBtn">
+                <span class="icon">+</span>
+                <span class="text">Add Person</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div id="mapContainer">
