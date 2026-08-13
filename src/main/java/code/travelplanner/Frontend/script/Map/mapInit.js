@@ -1,5 +1,5 @@
 
-function createMap() {
+export function createMap() {
 
     const map = new mapboxgl.Map({
         accessToken: `${MAPBOX_APIKEY}`,
