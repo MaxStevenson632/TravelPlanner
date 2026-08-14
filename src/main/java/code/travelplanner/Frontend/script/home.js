@@ -3,7 +3,8 @@ import * as tripService from './tripService.js';
 import { renderTripMarkersAndRouteOnMap } from './Map/mapController.js';
 import { getAccountNameFromToken } from "./auth.js";
 import { sanitizedHTML } from "./utils.js";
-import {renderTripWaypointsAndMembers} from "./sidebarRenderer.js";
+import { renderTripWaypointsAndMembers } from "./sidebarRenderer.js";
+import { openMemberSearch } from './memberSearch.js';
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -39,6 +40,8 @@ backToTripsBtn.addEventListener("click", () => {
 });
 
 const tripListContainer = document.getElementById("tripList");
+let tripId = null;
+let tripData = null;
 
 // User clicks on a trip on the sidebar
 tripListContainer.addEventListener('click', async (event) => {
@@ -48,14 +51,14 @@ tripListContainer.addEventListener('click', async (event) => {
         return;
     }
 
-    const tripId = clickedItem.dataset.tripId;
+    tripId = clickedItem.dataset.tripId;
     if (!tripId) {
         return;
     }
 
     sidebarRenderer.showTripDetailsPanel(clickedItem);
 
-    const tripData = await tripService.getMapData(tripId);
+    tripData = await tripService.getMapData(tripId);
 
     renderTripMarkersAndRouteOnMap(tripId);
     sidebarRenderer.renderTripWaypointsAndMembers(tripData);
@@ -76,6 +79,15 @@ cancelTripBtn.addEventListener("click", () => {
     tripFormContainer.classList.add("hidden");
     tripForm.reset();
 });
+
+document.getElementById("addPersonBtn").addEventListener("click", () => {
+
+    openMemberSearch(tripId, () => {
+
+        // After member added, refresh list of members and waypoints
+        renderTripWaypointsAndMembers(tripData);
+    })
+})
 
 
 
