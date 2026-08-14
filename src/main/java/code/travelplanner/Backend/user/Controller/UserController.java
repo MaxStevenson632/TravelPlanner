@@ -3,14 +3,17 @@ package code.travelplanner.Backend.user.Controller;
 import code.travelplanner.Backend.user.Dto.LoginResponseTokenDto;
 import code.travelplanner.Backend.user.Dto.UserLoginDto;
 import code.travelplanner.Backend.user.Dto.UserRegisterDto;
+import code.travelplanner.Backend.user.Dto.UserSearchDto;
 import code.travelplanner.Backend.user.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,5 +58,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message",
                     e.getMessage()));
         }
+    }
+
+    @GetMapping("/users/{tripId}/search")
+    public ResponseEntity<List<UserSearchDto>> searchUsers (@RequestParam String query, @PathVariable Long tripId,
+                                                            @AuthenticationPrincipal Long requesterId) {
+
+        return ResponseEntity.ok(userService.searchForUser(query, tripId, requesterId));
     }
 }
