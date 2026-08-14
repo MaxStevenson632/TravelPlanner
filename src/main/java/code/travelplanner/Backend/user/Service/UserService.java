@@ -2,6 +2,7 @@ package code.travelplanner.Backend.user.Service;
 
 import code.travelplanner.Backend.user.Dto.UserLoginDto;
 import code.travelplanner.Backend.user.Dto.UserRegisterDto;
+import code.travelplanner.Backend.user.Dto.UserSearchDto;
 import code.travelplanner.Backend.user.Entity.UserEntity;
 import code.travelplanner.Backend.user.Repository.UserRepository;
 import code.travelplanner.Backend.verification.VerificationService;
@@ -16,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -93,5 +96,13 @@ public class UserService {
 
         // Generate JWT
         return jwtService.generateToken(user.getUserId(), user.getName());
+    }
+
+    public List<UserSearchDto> searchForUser(String query, Long tripId, Long requesterId) {
+
+        return userRepository.searchUsersExcludingSelfAndOtherMembers(query.trim(), tripId, requesterId)
+                .stream()
+                .map(user -> new UserSearchDto(user.getUserId(), user.getName(), user.getEmail()))
+                .toList();
     }
 }
