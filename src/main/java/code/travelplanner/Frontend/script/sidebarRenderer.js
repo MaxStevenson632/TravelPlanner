@@ -1,8 +1,8 @@
-import {sanitizedHTML} from "./utils.js";
+import * as utils from "./utils.js";
 
 export function renderTripWaypointsAndMembers(tripData) {
 
-    document.getElementById("detailTripName").innerHTML = sanitizedHTML(tripData.name);
+    document.getElementById("detailTripName").innerHTML = utils.sanitizedHTML(tripData.name);
 
     const waypointsContainer = document.getElementById("detailWaypointsList");
     const peopleContainer = document.getElementById("detailPeopleList");
@@ -22,7 +22,7 @@ export function renderTripWaypointsAndMembers(tripData) {
                     ${!isLast ? `<div class="waypoint-line"></div>` : ''}
                 </div>
                 <div class="waypoint-copy">
-                    <h4 class="waypoint-name">${sanitizedHTML(waypoint.placeName)}</h4>
+                    <h4 class="waypoint-name">${utils.sanitizedHTML(waypoint.placeName)}</h4>
                 </div>
             </div>
             `;
@@ -39,15 +39,15 @@ export function renderTripWaypointsAndMembers(tripData) {
 
             let initials = '??';
             if (member.name != null) {
-                initials = member.name.substring(0, 2).toUpperCase();
+                initials = utils.getInitials(member.name);
             }
 
             const personHTML =`
                     <div class="person-row">
-                        <div class="person-initials">${sanitizedHTML(initials)}</div>
+                        <div class="person-initials">${utils.sanitizedHTML(initials)}</div>
                         <div class="person-copy">
-                            <span class="person-name">${sanitizedHTML(member.name)}</span>
-                            <span class="person-role">${sanitizedHTML(member.role)}</span>
+                            <span class="person-name">${utils.sanitizedHTML(member.name)}</span>
+                            <span class="person-role">${utils.sanitizedHTML(member.role)}</span>
                         </div>
                     </div>
                 `;
