@@ -28,9 +28,11 @@ public class SecurityConfiguration {
     private UserDetailsService userDetailsService;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final RateLimitFilter rateLimitFilter;
 
-    public SecurityConfiguration( JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfiguration( JwtAuthenticationFilter jwtAuthenticationFilter, RateLimitFilter rateLimitFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.rateLimitFilter = rateLimitFilter;
     }
 
     @Bean
@@ -58,7 +60,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/travelplanner/register", "/travelplanner/login", "/travelplanner/verify", "/css/**", "/js/**", "/error").permitAll()
                 // Logged-in users can access the following endpoints
                 .requestMatchers("/travelplanner/createTrip","/travelplanner/*/map-data", "/travelplanner/retrieve-trips",
-                        "/travelplanner/*/addMember/*", "/travelplanner/users/*/search").authenticated()
+                        "/travelplanner/*/addMember/*", "/travelplanner/users/*/search", "/travelplanner/deleteMember/*").authenticated()
                 // Any other URL is blocked unless user has logged in successfully
                 .anyRequest().authenticated());
 
@@ -80,6 +82,9 @@ public class SecurityConfiguration {
 
         // Register JWT filter
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Implement rate limiting after JWT Filter
+        http.addFilterAfter(rateLimitFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
