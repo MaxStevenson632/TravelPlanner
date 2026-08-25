@@ -2,9 +2,13 @@ import * as sidebarRenderer from './sidebarRenderer.js';
 import * as tripService from './tripService.js';
 import { renderTripMarkersAndRouteOnMap } from './Map/mapController.js';
 import { getAccountNameFromToken } from "./auth.js";
+import { getUserIdFromToken } from "./auth.js";
 import { sanitizedHTML } from "./utils.js";
 import { renderTripWaypointsAndMembers } from "./sidebarRenderer.js";
 import { openMemberSearch } from './memberSearch.js';
+import * as deleteMember from './deleteMember.js';
+import { editTripMember } from "./editMember.js";
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -62,6 +66,26 @@ tripListContainer.addEventListener('click', async (event) => {
 
     renderTripMarkersAndRouteOnMap(tripId);
     sidebarRenderer.renderTripWaypointsAndMembers(tripData);
+
+    const userId = getUserIdFromToken();
+    let ownerId = null;
+
+    // Get id of owner
+    tripData.members.forEach(member => {
+        if (member.role === 'OWNER') {
+            ownerId = member.id;
+        }
+    })
+
+    // Delete member button - Owner only
+    const deleteButton = document.getElementById('deleteMemberBtn');
+
+    // If user is owner of trip, allow them to see owner-only features
+    if (userId === ownerId) {
+        deleteButton.classList.remove('hidden');
+    } else {
+        deleteButton.classList.add('hidden');
+    }
 });
 
 const AddTripBtn = document.getElementById("addTripBtn");
@@ -89,6 +113,86 @@ document.getElementById("addPersonBtn").addEventListener("click", () => {
     })
 })
 
+let deleteMode = false;
+// Owner clicks on the delete member button
+document.getElementById("deleteMemberBtn").addEventListener("click", () => {
 
+    if (deleteMode) {
+        deleteMode = false;
+        deleteMember.exitDeleteMode();
+    } else {
+        deleteMember.deleteMode();
+        deleteMode = true;
+    }
+});
+
+// Owner clicks on a member to delete them
+document.getElementById("detailPeopleList").addEventListener("click", async(event) => {
+
+    // Must be in delete mode
+    if (!deleteMode) {
+        return;
+    }
+
+    const row = event.target.closest(".person-row.delete-mode");
+    const memberId = row.dataset.userId;
+
+    // Remove row before api call - optimistic approach
+    row.remove();
+
+    // Remove member from trip in DB
+    const response = await deleteMember.deleteMember(memberId, tripId);
+
+    // Re-render the people list - if successful, member removed and if not member re-appears
+    await tripService.getMapData(tripId);
+
+    deleteMember.exitDeleteMode();
+});
+
+document.getElementById("detailPeopleList").addEventListener("click", async(event) => {
+
+    if (deleteMode) {
+        return;
+    }
+
+    const roleBadge = event.target.closest(".person-role");
+
+    const row = roleBadge.closest(".person-row");
+    const memberId = row.dataset.userId;
+    const currentRole = row.dataset.userRole;
+
+    let newRole = null;
+
+    if (currentRole === "MEMBER") {
+        newRole = "VIEWER";
+    } else if (currentRole === "VIEWER") {
+        newRole = "MEMBER";
+    }
+
+    console.log(newRole);
+
+    let response = null;
+
+    if (newRole != null) {
+        response = await editTripMember(memberId, tripId, newRole);
+    } else {
+        console.log("Cannot change your own role");
+        return;
+    }
+
+    if (response) {
+        roleBadge.textContent = newRole;
+        roleBadge.dataset.role = newRole;
+    } else {
+        console.log("Error switching user's role");
+    }
+});
+
+function toggleOwnerControls(isOwner) {
+    const ownerControls = document.querySelectorAll(".owner-only");
+    ownerControls.forEach(el => {
+        el.classList.toggle("hidden", !isOwner);
+    });
+}
 
 
