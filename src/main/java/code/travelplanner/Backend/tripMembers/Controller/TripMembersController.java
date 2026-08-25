@@ -31,4 +31,21 @@ public class TripMembersController {
         tripMembersService.addPersonToTrip(tripId, requesterId, role, memberToAddId);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("deleteMember/{memberToDeleteId}")
+    public ResponseEntity<?> deleteMember(@PathVariable Long tripId, @PathVariable Long memberToDeleteId,
+    @AuthenticationPrincipal Long requesterId) {
+
+        tripMembersService.deletePersonFromTrip(requesterId, memberToDeleteId, tripId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("editMemberRole/{memberToEditId}")
+    public ResponseEntity<?> editMemberRole(@PathVariable Long tripId, @PathVariable Long memberToEditId,
+                                            @RequestBody String body,
+                                            @AuthenticationPrincipal Long requesterId) {
+
+        tripMembersService.editPersonRole(tripId, requesterId, body, memberToEditId);
+        return ResponseEntity.ok().build();
+    }
 }
