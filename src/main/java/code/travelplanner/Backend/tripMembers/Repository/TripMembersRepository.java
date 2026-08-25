@@ -2,6 +2,7 @@ package code.travelplanner.Backend.tripMembers.Repository;
 
 import code.travelplanner.Backend.trip.Entity.TripEntity;
 import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +15,7 @@ public interface TripMembersRepository extends JpaRepository<TripMembersEntity, 
     List<TripMembersEntity> findByIdUserId(long userId);
 
     List<TripMembersEntity> findByIdTripId(long tripId);
+
+    @Transactional
+    void deleteByIdUserId(long userId, long tripId);
 }
