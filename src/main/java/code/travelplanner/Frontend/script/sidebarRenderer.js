@@ -42,15 +42,21 @@ export function renderTripWaypointsAndMembers(tripData) {
                 initials = utils.getInitials(member.name);
             }
 
+            // If member role = OWNER
+            const isOwner = member.role === 'OWNER';
+
             const personHTML =`
-                    <div class="person-row">
-                        <div class="person-initials">${utils.sanitizedHTML(initials)}</div>
-                        <div class="person-copy">
-                            <span class="person-name">${utils.sanitizedHTML(member.name)}</span>
-                            <span class="person-role">${utils.sanitizedHTML(member.role)}</span>
-                        </div>
+                <div class="person-row" data-user-id = "${member.id}"  data-user-role = "${member.role}">
+                    <div class="person-initials">${utils.sanitizedHTML(initials)}</div>
+                    <div class="person-copy">
+                        <span class="person-name">${utils.sanitizedHTML(member.name)}</span>
+                        ${isOwner
+                            ? `<span class="person-role">${utils.sanitizedHTML(member.role)}</span>`
+                            : `<button class="person-role">${utils.sanitizedHTML(member.role)}</button>`
+                        }
                     </div>
-                `;
+                </div>
+            `;
 
             peopleContainer.insertAdjacentHTML('beforeend', personHTML);
         });
