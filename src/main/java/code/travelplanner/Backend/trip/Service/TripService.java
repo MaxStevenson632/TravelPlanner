@@ -110,6 +110,7 @@ public class TripService {
                     MemberInfoDto memberInfoDto = new MemberInfoDto();
                     memberInfoDto.setName(user.getName());
                     memberInfoDto.setRole(tripMember.getMemberRole());
+                    memberInfoDto.setId(tripMember.getId().getUserId());
 
                     return memberInfoDto;
                 })
