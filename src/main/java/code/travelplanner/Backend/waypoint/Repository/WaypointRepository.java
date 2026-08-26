@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface WaypointRepository extends JpaRepository<WaypointEntity, Long>  {
 
     Optional<WaypointEntity> findByPlaceName(String placeName);
+
+    Optional<WaypointEntity> findByLatitudeAndLongitude(double latitude, double longitude);
 }
