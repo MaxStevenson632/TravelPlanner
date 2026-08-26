@@ -28,7 +28,10 @@
 
     <div class = "tripsHeading">
         <h3>Your trips</h3>
-        <button id = "addTripIconBtn" type = "button" aria-label = "Create new trip">+</button>
+        <button id = "addTripBtn" title = "Create new trip">
+            <span class="icon">+</span>
+            <span class="text"> Create New Trip </span>
+        </button>
     </div>
 
     <ul id = "tripList">
@@ -49,11 +52,6 @@
         <div id="viewWaypoints" class="detail-view is-visible">
             <div id="detailWaypointsList">
             </div>
-
-            <button class="expandable-add-btn" id="addWaypointBtn">
-                <span class="icon">+</span>
-                <span class="text">Add Waypoint</span>
-            </button>
         </div>
 
         <div id="viewPeople" class="detail-view">
@@ -77,7 +75,7 @@
     <div id = "map"></div>
 
     <button id="renderMarkers"> Show markers </button>
-    <button id="addTripBtn"> Create New Trip! </button>
+    <button id="addToTripBtn" class = "add-to-trip-btn hidden"> Add To Trip </button>
 
     <div id = "tripFormContainer" class = "hidden">
         <h2> Create New Trip </h2>
@@ -128,8 +126,14 @@
         </div>
     </div>
 
-</div>
+    <div class="map-wrapper">
+        <div class = "search-box">
+            <input type = "text" id = "placeInput" placeholder = "Search a place..." autocomplete = "off">
+            <ul id = "suggestionsList" class = "suggestions-dropdown"> </ul>
+        </div>
+    </div>
 
+</div>
 
 </body>
 </html>
