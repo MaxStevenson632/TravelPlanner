@@ -3,7 +3,7 @@ import { getMapData } from '../tripService.js';
 import { addMarkers } from './mapMarkers.js';
 import { renderRouteBetweenTwoPoints } from './mapNavigation.js';
 
-let mapInstance = null;
+export let mapInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
 
