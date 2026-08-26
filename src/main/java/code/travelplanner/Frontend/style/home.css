@@ -455,12 +455,11 @@ body {
 
 /* ---------- Floating add-trip button (on map) ---------- */
 #addTripBtn {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    padding: 0.75rem 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 2.5rem;
+    padding: 0 0.85rem;
     background: var(--gold);
     color: #1c3039;
     border: none;
@@ -470,13 +469,27 @@ body {
     font-size: 0.95rem;
     font-weight: 700;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-    transition: background 180ms ease, transform 180ms ease;
+    transition: background 180ms ease;
+    white-space: nowrap;
 }
 #addTripBtn:hover,
 #addTripBtn:focus-visible {
     background: #f5d285;
-    transform: translateX(-50%) translateY(-2px);
     outline: none;
+}
+
+#addTripBtn:hover .text,
+#addTripBtn:focus-visible .text {
+    max-width: 150px;
+    opacity: 1;
+    margin-left: 0.5rem;
+}
+
+#addTripBtn .text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width 250ms ease, opacity 250ms ease, margin-left 250ms ease;
 }
 
 /* ---------- Trip form overlay ---------- */
@@ -578,234 +591,77 @@ input:focus {
     margin-left: 0.5rem;
 }
 
-/* ── Member search overlay — sits over the map ───────────────────────── */
-#memberSearchOverlay {
+.search-box {
     position: absolute;
-    inset: 0;
-    background: #ffffff;
-    z-index: 1001;
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    overflow-y: auto;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    width: 320px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.member-search-panel {
+.search-box input {
     width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.member-search-heading {
-    font-family: 'Fraunces', Georgia, serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #1c3039;
-    margin: 0;
-}
-
-/* ── Search input ────────────────────────────────────────────────────── */
-.member-search-input-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    border: 1px solid #ccc;
-    border-radius: 0.55rem;
-    padding: 0.65rem 0.85rem;
-    transition: border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.member-search-input-wrap:focus-within {
-    border-color: var(--teal);
-    box-shadow: 0 0 0 3px rgba(26, 158, 160, 0.15);
-}
-
-.member-search-icon {
-    font-size: 1rem;
-    flex-shrink: 0;
-    opacity: 0.6;
-}
-
-.member-search-input {
+    padding: 10px 14px;
     border: none;
+    border-radius: 8px;
     outline: none;
-    width: 100%;
-    font-family: inherit;
-    font-size: 0.95rem;
-    color: #1c3039;
-    padding: 0;
-    box-shadow: none;
+    box-sizing: border-box;
 }
 
-/* ── Results list ────────────────────────────────────────────────────── */
-.member-results-list {
+.suggestions-dropdown {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
-.member-result-loading,
-.member-result-empty,
-.member-result-error {
-    font-size: 0.9rem;
-    color: #6b7280;
-    padding: 0.5rem 0;
-}
-
-.member-result-error { color: #dc2626; }
-
-/* ── Individual result row ───────────────────────────────────────────── */
-.member-result-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 0.75rem;
-    background: #f9fafb;
-    transition: border-color 180ms ease, background 180ms ease;
-}
-
-.member-result-item:hover {
-    border-color: var(--teal);
-    background: #ffffff;
-}
-
-.member-result-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-}
-
-/* Avatar initials circle — matches person-initials in sidebar */
-.member-result-initials {
-    width: 2.35rem;
-    height: 2.35rem;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: #75b49b;
-    color: #173038;
-    font-size: 0.74rem;
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.member-result-copy {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-
-.member-result-name {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: #1c3039;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.member-result-email {
-    font-size: 0.78rem;
-    color: #6b7280;
-    margin-top: 0.1rem;
-}
-
-/* Base role button — starts as a small circle like the + icon buttons */
-.member-role-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 2rem;
-    padding: 0 0.6rem;
-    border-radius: var(--radius-pill);
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
+.suggestions-dropdown li {
+    padding: 10px 14px;
     font-size: 0.85rem;
-    font-weight: 700;
-    white-space: nowrap;
-    transition: background 180ms ease, color 180ms ease,
-    max-width 250ms ease, padding 250ms ease;
+    cursor: pointer;
+    border-top: 1px solid #eee;
 }
 
-.member-role-btn .icon {
-    font-size: 1.1rem;
-    line-height: 1;
-    flex-shrink: 0;
-}
+.suggestions-dropdown li:hover { background-color: #f5f5f5; }
 
-/* Text hidden by default — same pattern as .expandable-add-btn */
-.member-role-btn .text {
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-width 250ms ease, opacity 250ms ease, margin-left 250ms ease;
-}
-
-.member-role-btn:hover .text,
-.member-role-btn:focus-visible .text {
-    max-width: 120px;
-    opacity: 1;
-    margin-left: 0.4rem;
-}
-
-.member-role-btn:focus-visible {
+/* Visual highlight while reordering with arrow keys */
+.waypoint-item.reordering {
+    border: 2px dashed #f59e0b;
+    background-color: rgba(245, 158, 11, 0.1);
     outline: none;
 }
 
-/* Add Member button — teal */
-.member-role-btn--member {
-    background: var(--teal);
-    color: #ffffff;
-}
+/* Rounded oval button positioned in bottom-center of map */
+.add-to-trip-btn {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10; /* Ensures button renders above Mapbox canvas */
 
-.member-role-btn--member:hover,
-.member-role-btn--member:focus-visible {
-    background: var(--teal-dark);
-}
-
-/* Add Viewer button — outlined, matches the light card background */
-.member-role-btn--viewer {
-    background: transparent;
-    color: var(--teal);
-    border: 1px solid var(--teal);
-}
-
-.member-role-btn--viewer:hover,
-.member-role-btn--viewer:focus-visible {
-    background: var(--teal);
-    color: #ffffff;
-}
-
-/* ── Cancel button — matches gold add-trip button style ─────────────── */
-.member-cancel-btn {
-    align-self: center;
-    padding: 0.75rem 1.5rem;
-    background: var(--gold, #f1c56b);
-    color: #1c3039;
+    padding: 12px 28px;
+    border-radius: 9999px; /* Pill / Oval shape */
     border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    font-family: inherit;
+
+    background-color: #f6c453; /* Golden accent matching your UI */
+    color: #1a202c;
     font-size: 0.95rem;
     font-weight: 700;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: background 180ms ease, transform 180ms ease;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.member-cancel-btn:hover,
-.member-cancel-btn:focus-visible {
-    background: #f5d285;
-    transform: translateY(-2px);
-    outline: none;
+.add-to-trip-btn:hover {
+    background-color: #f6c453;
+    transform: translateX(-50%) scale(1.03);
+}
+
+.add-to-trip-btn:active {
+    transform: translateX(-50%) scale(0.98);
 }
