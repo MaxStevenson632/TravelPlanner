@@ -58,7 +58,7 @@ public class TripService {
                 newTripData.getStartDate(), newTripData.getEndDate());
         tripRepository.save(tripEntity);
         tripMembersService.createOwner(tripEntity.getTripId(), userId);
-        waypointService.addWaypoint(newTripData.getWaypoints(), tripEntity.getTripId());
+        waypointService.addInitialWaypoints(newTripData.getWaypoints(), tripEntity.getTripId());
 
         return  ResponseEntity.ok().build();
     }
