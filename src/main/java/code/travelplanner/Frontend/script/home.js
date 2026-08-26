@@ -8,6 +8,8 @@ import { renderTripWaypointsAndMembers } from "./sidebarRenderer.js";
 import { openMemberSearch } from './memberSearch.js';
 import * as deleteMember from './deleteMember.js';
 import { editTripMember } from "./editMember.js";
+import {fetchPlaces} from './Map/mapSearch.js';
+import { handleReorderKeydown, displayWaypointForOrdering } from "./addWaypoint.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -41,6 +43,7 @@ const backToTripsBtn = document.getElementById("backToTripsBtn");
 // User de-selects the trip, go back to list of trips
 backToTripsBtn.addEventListener("click", () => {
     sidebarRenderer.showTripListPanel();
+    tripId = null;
 });
 
 const tripListContainer = document.getElementById("tripList");
@@ -87,6 +90,44 @@ tripListContainer.addEventListener('click', async (event) => {
         deleteButton.classList.add('hidden');
     }
 });
+
+const placeInput = document.getElementById('placeInput');
+const suggestionsList = document.getElementById('suggestionsList');
+let debounceTimer = null;
+
+// User searches for a place
+placeInput.addEventListener('input', (event) => {
+
+    if (tripId === null) {
+        console.log("Must select a trip");
+        return;
+    }
+
+    // Reset timeout
+    clearTimeout(debounceTimer);
+    const query = event.target.value.trim();
+
+    // Must have more than 3 characters entered
+    if (query.length < 3) {
+        suggestionsList.innerHTML = '';
+        return;
+    }
+
+    // Wait 1000ms per keystroke to stay within Nominatim's 1 req/sec policy
+    debounceTimer = setTimeout(() => fetchPlaces(query, placeInput), 400);
+});
+
+// User clicks to add waypoint to trip
+document.getElementById('addToTripBtn').addEventListener('click', () => {
+
+    displayWaypointForOrdering(tripId);
+
+    // Remove focus on search bar
+    document.getElementById('placeInput').blur();
+
+    // Start handling the keydown events
+    document.addEventListener('keydown', handleReorderKeydown);
+})
 
 const AddTripBtn = document.getElementById("addTripBtn");
 const tripFormContainer = document.getElementById("tripFormContainer");
