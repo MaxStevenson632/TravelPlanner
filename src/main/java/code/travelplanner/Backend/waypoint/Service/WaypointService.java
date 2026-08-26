@@ -1,10 +1,14 @@
 package code.travelplanner.Backend.waypoint.Service;
 
+import code.travelplanner.Backend.trip.Entity.TripPlacesEntity;
 import code.travelplanner.Backend.trip.Repository.TripPlacesRepository;
 import code.travelplanner.Backend.trip.Service.TripPlacesService;
 import code.travelplanner.Backend.waypoint.Dto.GeocodingResponse;
+import code.travelplanner.Backend.waypoint.Dto.WaypointLinkToPlacesDto;
+import code.travelplanner.Backend.waypoint.Dto.WaypointMapDto;
 import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import code.travelplanner.Backend.waypoint.Repository.WaypointRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,18 +18,16 @@ public class WaypointService {
 
     private final WaypointRepository waypointRepository;
     private final GeocodingService geocodingService;
-    private final TripPlacesService tripPlacesService;
     private final TripPlacesRepository tripPlacesRepository;
 
     public WaypointService(WaypointRepository waypointRepository, GeocodingService geocodingService,
-                           TripPlacesService tripPlacesService, TripPlacesRepository tripPlacesRepository) {
+                           TripPlacesRepository tripPlacesRepository) {
         this.waypointRepository = waypointRepository;
         this.geocodingService = geocodingService;
-        this.tripPlacesService = tripPlacesService;
         this.tripPlacesRepository = tripPlacesRepository;
     }
 
-    public void addWaypoint(List<String> waypoints, long tripId) {
+    public void addInitialWaypoints(List<String> waypoints, long tripId) {
 
         double latitude = 0;
         double longitude = 0;
@@ -49,8 +51,29 @@ public class WaypointService {
                 waypointRepository.save(waypointEntity);
             }
 
-            tripPlacesService.linkWaypointToTrip(tripId, waypointEntity.getWaypointId(), visitOrder);
+            tripPlacesRepository.save(new TripPlacesEntity(tripId, waypointEntity.getWaypointId(), visitOrder));
             visitOrder += 1;
         }
+    }
+
+    @Transactional
+    public WaypointLinkToPlacesDto addNewWaypoints(WaypointMapDto waypointDto, long tripId) {
+
+        WaypointEntity waypointEntity = null;
+        // Waypoint already exists, fetch from DB
+        if (waypointRepository.findByLatitudeAndLongitude(waypointDto.getLatitude(), waypointDto.getLongitude()).isPresent()) {
+           waypointEntity = waypointRepository.findByLatitudeAndLongitude(waypointDto.getLatitude(), waypointDto.getLongitude()).get();
+
+        // Waypoint does not exist, create new WaypointEntity and add to Waypoint table
+        } else {
+            waypointEntity = new WaypointEntity(
+                    waypointDto.getLatitude(), waypointDto.getLongitude(), waypointDto.getPlaceName()
+            );
+            waypointRepository.save(waypointEntity);
+        }
+
+        WaypointLinkToPlacesDto waypointLinkDto = new  WaypointLinkToPlacesDto(tripId, waypointEntity.getWaypointId(),
+                waypointDto.getVisitOrder());
+        return waypointLinkDto;
     }
 }
