@@ -1,5 +1,6 @@
 package code.travelplanner.Backend.trip.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class TripPlacesEntity {
     private long waypointId;
 
     @Column(name = "visit_order")
+    @JsonProperty("visit_order")
     private int visitOrder;
 
     public TripPlacesEntity() {}
