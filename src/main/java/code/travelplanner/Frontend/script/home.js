@@ -10,6 +10,7 @@ import * as deleteMember from './deleteMember.js';
 import { editTripMember } from "./editMember.js";
 import {fetchPlaces} from './Map/mapSearch.js';
 import { handleReorderKeydown, displayWaypointForOrdering } from "./addWaypoint.js";
+import {waypointDeleteMode, exitWaypointDeleteMode, deleteWaypoint} from "./deleteWaypoint.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -167,6 +168,18 @@ document.getElementById("deleteMemberBtn").addEventListener("click", () => {
     }
 });
 
+// Owner clicks on the delete waypoint button
+document.getElementById("deleteWaypointBtn").addEventListener("click", () => {
+
+    if (deleteMode) {
+        deleteMode = false;
+        exitWaypointDeleteMode();
+    } else {
+        waypointDeleteMode();
+        deleteMode = true;
+    }
+});
+
 // Owner clicks on a member to delete them
 document.getElementById("detailPeopleList").addEventListener("click", async(event) => {
 
@@ -226,6 +239,29 @@ document.getElementById("detailPeopleList").addEventListener("click", async(even
         roleBadge.dataset.role = newRole;
     } else {
         console.log("Error switching user's role");
+    }
+});
+
+// User clicks on a waypoint to remove it
+document.getElementById('detailWaypointsList').addEventListener('click', async (event) => {
+
+    if (!deleteMode) {
+        return;
+    }
+
+    const waypointRow = event.target.closest('.waypoint-item');
+    if (!waypointRow) {
+        return;
+    }
+
+    const waypointId = waypointRow.dataset.waypointId;
+    console.log(waypointId);
+    const response = await deleteWaypoint(tripId, waypointId);
+
+    if (response) {
+        waypointRow.remove();
+        await tripService.getMapData(tripId);
+        exitWaypointDeleteMode();
     }
 });
 
