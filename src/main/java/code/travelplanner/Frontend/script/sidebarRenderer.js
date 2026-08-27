@@ -16,7 +16,7 @@ export function renderTripWaypointsAndMembers(tripData) {
             const isLast = index === tripData.waypoints.length - 1;
 
             const waypointHTML =
-                `<div class="waypoint-item">
+                `<div class="waypoint-item" data-waypoint-id = "${waypoint.waypointId}">
                 <div class="waypoint-marker">
                     <div class="waypoint-dot"></div>
                     ${!isLast ? `<div class="waypoint-line"></div>` : ''}
