@@ -17,6 +17,8 @@ export async function editTripMember(userId, tripId, newRole) {
             alert("Error switching member's role");
         }
 
+        return response.ok;
+
     } catch (error) {
         console.log("Error editing member's role", error);
     }
