@@ -27,4 +27,12 @@ public class TripPlacesController {
         tripPlacesService.addWaypointToTrip(tripId, body, requesterId);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/deleteLinkedWaypoint/{waypointId}")
+    public ResponseEntity<?> deleteWaypointFromTrip(@PathVariable Long tripId,
+                                                    @PathVariable Long waypointId, @AuthenticationPrincipal Long requesterId) {
+
+        tripPlacesService.deleteWaypoint(tripId, waypointId, requesterId);
+        return  ResponseEntity.ok().build();
+    }
 }
