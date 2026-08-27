@@ -6,6 +6,7 @@ public class WaypointMapDto {
     private double latitude;
     private double longitude;
     private int visitOrder;
+    private Long waypointId;
 
     public String getPlaceName() { return placeName; }
     public void setPlaceName(String placeName) { this.placeName = placeName; }
@@ -18,4 +19,7 @@ public class WaypointMapDto {
 
     public int getVisitOrder() { return visitOrder; }
     public void setVisitOrder(int visitOrder) { this.visitOrder = visitOrder; }
+
+    public Long getWaypointId() { return waypointId; }
+    public void setWaypointId(Long waypointId) { this.waypointId = waypointId; }
 }
