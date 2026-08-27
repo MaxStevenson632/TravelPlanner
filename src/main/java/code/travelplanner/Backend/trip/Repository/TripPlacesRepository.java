@@ -18,4 +18,7 @@ public interface TripPlacesRepository extends JpaRepository<TripPlacesEntity, Lo
     @Query("UPDATE TripPlacesEntity tripPlaces SET tripPlaces.visitOrder = tripPlaces.visitOrder + 1 " +
     "WHERE tripPlaces.tripId = :tripId AND tripPlaces.visitOrder >= :newOrder")
     void incrementOrders(@Param("tripId") Long tripId, @Param("newOrder") Integer newOrder);
+
+    @Transactional
+    void deleteByWaypointId(Long waypointId, Long tripId);
 }
