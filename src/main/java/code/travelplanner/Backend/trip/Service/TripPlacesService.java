@@ -49,4 +49,17 @@ public class TripPlacesService {
 
         tripPlacesRepository.save(new TripPlacesEntity(tripId, waypointLinkDto.getWaypointId(), waypointDto.getVisitOrder()));
     }
+
+    public void deleteWaypoint(Long tripId, Long waypointId, Long requesterId) {
+
+        TripMembersEntity tripMember = tripMembersRepository.findByIdTripIdAndIdUserId(tripId, requesterId)
+                .orElseThrow(() -> new IllegalArgumentException("Error matching user with trip"));
+
+        // Verify user has permission to add a waypoint
+        if (!(tripMember.getMemberRole().equals(Role.OWNER) || tripMember.getMemberRole().equals(Role.MEMBER))) {
+            throw new IllegalArgumentException("User does not have permission to add member");
+        }
+
+        tripPlacesRepository.deleteByWaypointId(waypointId, tripId);
+    }
 }
