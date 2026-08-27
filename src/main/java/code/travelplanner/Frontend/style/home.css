@@ -665,3 +665,159 @@ input:focus {
 .add-to-trip-btn:active {
     transform: translateX(-50%) scale(0.98);
 }
+
+/* Delete Member Button Styles */
+#deleteMemberBtn {
+    background: #e53e3e !important;
+    color: #ffffff !important;
+}
+
+#deleteMemberBtn:hover,
+#deleteMemberBtn:focus-visible {
+    background: #c53030 !important;
+}
+
+/* Active state for Delete Button */
+#deleteMemberBtn.is-active {
+    background: #9b2c2c !important;
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.4);
+}
+
+/* Red outline and hover feedback on member rows when delete mode is active */
+.person-row.delete-mode {
+    border-color: #e53e3e !important;
+    outline: 2px solid #e53e3e !important;
+    outline-offset: -2px;
+    cursor: pointer;
+    transition: outline 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.person-row.delete-mode:hover {
+    background-color: rgba(229, 62, 62, 0.12) !important; /* Visual cue when hovering over a deletable row */
+}
+
+/* ---------- Add Member Modal Overlay ---------- */
+/* ---------- Member Search Overlay ---------- */
+#memberSearchOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1001; /* Layers above the Mapbox canvas */
+    background: rgba(14, 95, 97, 0.85); /* Semi-transparent backdrop */
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.member-search-panel {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: var(--radius-card, 0.75rem);
+    padding: 2rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.member-search-heading {
+    margin: 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.6rem;
+    color: #1c3039;
+    text-align: center;
+}
+
+.member-search-input-wrap {
+    width: 100%;
+}
+
+.member-search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.member-search-input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26, 158, 160, 0.15);
+}
+
+.member-results-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.member-results-list li {
+    padding: 0.65rem 0.85rem;
+    border-radius: 0.4rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #334155;
+    transition: background-color 0.15s ease;
+}
+
+.member-results-list li:hover {
+    background: #e2e8f0;
+}
+
+.member-cancel-btn {
+    width: 100%;
+    padding: 0.65rem;
+    border: none;
+    background: #e2e8f0;
+    color: #475569;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.member-cancel-btn:hover {
+    background: #cbd5e1;
+    color: #1e293b;
+}
+
+/* Delete Waypoint Button Styles */
+#deleteWaypointBtn {
+    background: #e53e3e !important;
+    color: #ffffff !important;
+}
+
+#deleteWaypointBtn:hover,
+#deleteWaypointBtn:focus-visible {
+    background: #c53030 !important;
+}
+
+#deleteWaypointBtn.is-active {
+    background: #9b2c2c !important;
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.4);
+}
+
+/* Red outline highlight on waypoint items when delete mode is active */
+.waypoint-item.delete-mode {
+    border: 2px solid #e53e3e !important;
+    outline: 2px solid #e53e3e !important;
+    outline-offset: -2px;
+    cursor: pointer;
+    transition: outline 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.waypoint-item.delete-mode:hover {
+    background-color: rgba(229, 62, 62, 0.12) !important;
+}
