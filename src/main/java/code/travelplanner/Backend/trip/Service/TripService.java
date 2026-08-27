@@ -94,6 +94,7 @@ public class TripService {
                     waypointMapDto.setLatitude(waypoint.getLatitude());
                     waypointMapDto.setLongitude(waypoint.getLongitude());
                     waypointMapDto.setVisitOrder(tripPlace.getVisitOrder());
+                    waypointMapDto.setWaypointId(waypoint.getWaypointId());
 
                     return waypointMapDto;
                 })
