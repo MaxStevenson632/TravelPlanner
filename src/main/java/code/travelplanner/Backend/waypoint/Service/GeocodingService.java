@@ -3,9 +3,16 @@ package code.travelplanner.Backend.waypoint.Service;
 import code.travelplanner.Backend.Exception.PlaceNotFoundException;
 import code.travelplanner.Backend.waypoint.Dto.GeocodingResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GeocodingService{
@@ -22,6 +29,7 @@ public class GeocodingService{
         this.restTemplate = restTemplate;
     }
 
+    @Cacheable(value = "waypointCoordinates", key = "#placeName")
     public GeocodingResponse getCoordinates(String placeName) {
 
         enforceRateLimit();
@@ -41,6 +49,30 @@ public class GeocodingService{
 
         // return the first object
         return response[0];
+    }
+
+    @Cacheable(value = "waypointSearchResults", key = "#query", unless = "#result == null")
+    public List<GeocodingResponse> searchFourPlaces(String query) {
+
+        String url = UriComponentsBuilder.fromUriString(geoUrl)
+                .queryParam("q", query)
+                .queryParam("format", "json")
+                .queryParam("limit", "4")
+                .queryParam("accept-language", "en")
+                .toUriString();
+
+        GeocodingResponse[] results = restTemplate.getForObject(url, GeocodingResponse[].class);
+
+        if (results == null || results.length == 0) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(results)
+                .map(result -> new GeocodingResponse(
+                        result.getPlaceName(),
+                        result.getLatitude(),
+                        result.getLongitude()))
+                .collect(Collectors.toList());
     }
 
     // Temporary rate limiting - breaks if multiple servers/ threads, doesn't rate limit users either
