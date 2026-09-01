@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/travelplanner/register", "/travelplanner/login", "/travelplanner/verify", "/css/**", "/js/**", "/error").permitAll()
                 // Logged-in users can access the following endpoints
                 .requestMatchers("/travelplanner/createTrip","/travelplanner/*/map-data", "/travelplanner/retrieve-trips",
-                        "/travelplanner/*/members/addMember/*", "/travelplanner/users/*/search",
+                        "/travelplanner/*/members/addMember/*", "/travelplanner/users/*/search", "/travelplanner/waypoint/search",
                         "/travelplanner/*/addWaypoint", "/travelplanner/*/deleteLinkedWaypoint/*",
                         "/travelplanner/*/members/deleteMember/*", "/travelplanner/*/members/editMemberRole/*").authenticated()
                 // Any other URL is blocked unless user has logged in successfully
