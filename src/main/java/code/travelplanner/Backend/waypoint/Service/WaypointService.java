@@ -2,13 +2,11 @@ package code.travelplanner.Backend.waypoint.Service;
 
 import code.travelplanner.Backend.trip.Entity.TripPlacesEntity;
 import code.travelplanner.Backend.trip.Repository.TripPlacesRepository;
-import code.travelplanner.Backend.trip.Service.TripPlacesService;
 import code.travelplanner.Backend.waypoint.Dto.GeocodingResponse;
-import code.travelplanner.Backend.waypoint.Dto.WaypointLinkToPlacesDto;
 import code.travelplanner.Backend.waypoint.Dto.WaypointMapDto;
 import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import code.travelplanner.Backend.waypoint.Repository.WaypointRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,24 +54,16 @@ public class WaypointService {
         }
     }
 
-    @Transactional
-    public WaypointLinkToPlacesDto addNewWaypoints(WaypointMapDto waypointDto, long tripId) {
+    @Cacheable(value = "waypoints", key = "#waypointDto.placeName")
+    public WaypointEntity fetchWaypoint(WaypointMapDto waypointDto) {
 
-        WaypointEntity waypointEntity = null;
-        // Waypoint already exists, fetch from DB
-        if (waypointRepository.findByLatitudeAndLongitude(waypointDto.getLatitude(), waypointDto.getLongitude()).isPresent()) {
-           waypointEntity = waypointRepository.findByLatitudeAndLongitude(waypointDto.getLatitude(), waypointDto.getLongitude()).get();
-
-        // Waypoint does not exist, create new WaypointEntity and add to Waypoint table
-        } else {
-            waypointEntity = new WaypointEntity(
-                    waypointDto.getLatitude(), waypointDto.getLongitude(), waypointDto.getPlaceName()
-            );
-            waypointRepository.save(waypointEntity);
-        }
-
-        WaypointLinkToPlacesDto waypointLinkDto = new  WaypointLinkToPlacesDto(tripId, waypointEntity.getWaypointId(),
-                waypointDto.getVisitOrder());
-        return waypointLinkDto;
+        // Find the waypoint from cache or DB
+        return waypointRepository.findByPlaceName(waypointDto.getPlaceName())
+                .orElseGet(() -> {
+                    // Not found, create and save waypoint
+                    WaypointEntity newWaypoint = new WaypointEntity(
+                            waypointDto.getLatitude(), waypointDto.getLongitude(), waypointDto.getPlaceName());
+                    return waypointRepository.save(newWaypoint);
+                });
     }
 }
