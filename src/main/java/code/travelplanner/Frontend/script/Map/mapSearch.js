@@ -6,21 +6,17 @@ import {renderTripWaypointsAndMembers} from "../sidebarRenderer.js";
 
 let currentMarker = null;
 let selectedCoordinates = null;
-export let selectedPlace = null;
+export const selectedPlaceState = {
+    selectedPlace: null
+};
 
 
 export async function fetchPlaces(query, placeInput) {
 
     try {
-        const response = await fetch(
-
-            // Limit response to 4 results
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=4`,
-            {
+        const response = await fetch(`http://localhost:8080/travelplanner/waypoint/search?query=${encodeURIComponent(query)}`, {
                 headers: {
-
-                    // Required by Nominatim policy
-                    'User-Agent': 'TravelPlannerApp/1.0 (github.com/MaxStevenson632)'
+                    'Authorization': `Bearer ${token}`
                 }
             }
         );
@@ -69,7 +65,7 @@ function renderSuggestions(places) {
             placeInput.value = place.display_name;
             suggestionsList.innerHTML = '';
 
-            showAddToTripBtn(place, selectedPlace);
+            showAddToTripBtn(place, selectedPlaceState.selectedPlace);
         });
 
         suggestionsList.appendChild(li);
@@ -78,7 +74,7 @@ function renderSuggestions(places) {
 
 function showAddToTripBtn(place) {
 
-    selectedPlace = place;
+    selectedPlaceState.selectedPlace = place;
     const addToTripBtn = document.getElementById('addToTripBtn')
     addToTripBtn.classList.remove('hidden');
 }
