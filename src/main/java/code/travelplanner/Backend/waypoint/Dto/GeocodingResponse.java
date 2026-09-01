@@ -13,6 +13,12 @@ public class GeocodingResponse {
     @JsonProperty("lon")
     private double longitude;
 
+    public GeocodingResponse(String  placeName, double latitude, double longitude) {
+        this.placeName = placeName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public String getPlaceName() { return placeName; }
     public void setPlaceName(String placeName) { this.placeName = placeName; }
 
