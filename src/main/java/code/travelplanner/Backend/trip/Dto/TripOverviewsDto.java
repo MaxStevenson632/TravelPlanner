@@ -8,6 +8,8 @@ public class TripOverviewsDto {
     private Role role;
     private long id;
 
+    public TripOverviewsDto() {}
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
