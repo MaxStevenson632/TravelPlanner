@@ -1,69 +1,61 @@
 package code.travelplanner.Backend.verification;
 
+import code.travelplanner.Backend.Exception.UserNotFoundException;
 import code.travelplanner.Backend.user.Entity.UserEntity;
 import code.travelplanner.Backend.user.Repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class VerificationService {
 
-    private final VerificationRepository verificationRepository;
     private final UserRepository userRepository;
+    private RedisTemplate<String, Long> redisTemplate;
 
-    public VerificationService(VerificationRepository verificationRepository,  UserRepository userRepository) {
-        this.verificationRepository = verificationRepository;
+    public VerificationService(UserRepository userRepository,
+                               RedisTemplate<String, Long> redisTemplate) {
         this.userRepository = userRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     public String generateToken(UserEntity user) {
 
-        VerificationEntity verificationEntry = new VerificationEntity();
-
         // Generates a random 36-character long string - Used for verification
         String token = UUID.randomUUID().toString();
 
-        verificationEntry.setToken(token);
-        verificationEntry.setExpiryDate(LocalDateTime.now().plusMinutes(20));
-        verificationEntry.setUser(user);
-
-        verificationRepository.save(verificationEntry);
-
+        // Add the token, userId to cache with 20 minute expiration time
+        redisTemplate.opsForValue().set(token, user.getUserId(), 20, TimeUnit.MINUTES);
         return token;
     }
 
     @Transactional
     public void verifyToken(String token) {
 
-        // Find token row
-        VerificationEntity tokenEntry = verificationRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Invalid token"));
+        // Get userId from token
+        Long userId = redisTemplate.opsForValue().get(token);
 
-        // Check token hasn't expired
-        if (tokenEntry.getExpiryDate().isBefore(LocalDateTime.now())) {
+        // Token expired or invalid
+        if (userId == null) {
             throw new RuntimeException("Token has expired");
         }
 
-        UserEntity user = tokenEntry.getUser();
+        // Check user exists
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Enable user's account
         user.setAccountEnabled(true);
         userRepository.save(user);
 
-        // Delete token row
-        verificationRepository.delete(tokenEntry);
-    }
-
-    // Runs every 20 minutes automatically
-    @Scheduled(fixedRate = 12000)
-    @Transactional
-    public void removeExpiredTokens() {
-
-        LocalDateTime now = LocalDateTime.now();
-
-        // Delete all rows where expiration date is less than right now
-        verificationRepository.deleteAllByExpiryDateBefore(now);
+        // Delete token from cache
+        redisTemplate.delete(token);
     }
 }
