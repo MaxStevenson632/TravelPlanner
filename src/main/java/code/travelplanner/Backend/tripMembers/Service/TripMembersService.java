@@ -5,6 +5,8 @@ import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
 import code.travelplanner.Backend.tripMembers.Repository.TripMembersRepository;
 import code.travelplanner.Backend.user.Entity.UserEntity;
 import code.travelplanner.Backend.user.Repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +27,9 @@ public class TripMembersService {
         tripMembersRepository.save(owner);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "tripList", key = "#memberToDeleteId"),
+    })
     public void addPersonToTrip(Long tripId, Long requesterId, String role, Long memberToAddId) {
 
         // Verify user belongs to trip
@@ -57,6 +62,9 @@ public class TripMembersService {
         tripMembersRepository.save(member);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "tripList", key = "#memberToDeleteId"),
+    })
     public void deletePersonFromTrip(Long requesterId, Long memberToDeleteId, Long tripId) {
 
         // Verify user belongs to trip
