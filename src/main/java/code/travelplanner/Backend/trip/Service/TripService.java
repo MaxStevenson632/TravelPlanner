@@ -23,6 +23,9 @@ import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import code.travelplanner.Backend.waypoint.Repository.WaypointRepository;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -128,6 +131,7 @@ public class TripService {
         return mapData;
     }
 
+    @Cacheable(value = "tripList", key = "#userId")
     public TripOverviewsListDto getTripOverviewsData(Long userId) {
 
         List<TripMembersEntity> tripMembers = tripMembersRepository.findByIdUserId(userId);
