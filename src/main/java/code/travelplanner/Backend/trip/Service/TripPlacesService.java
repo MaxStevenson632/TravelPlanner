@@ -5,8 +5,8 @@ import code.travelplanner.Backend.trip.Repository.TripPlacesRepository;
 import code.travelplanner.Backend.tripMembers.Entity.Role;
 import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
 import code.travelplanner.Backend.tripMembers.Repository.TripMembersRepository;
-import code.travelplanner.Backend.waypoint.Dto.WaypointLinkToPlacesDto;
 import code.travelplanner.Backend.waypoint.Dto.WaypointMapDto;
+import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -44,10 +44,11 @@ public class TripPlacesService {
         // Increment visit order of waypoints
         tripPlacesRepository.incrementOrders(tripId, waypointDto.getVisitOrder());
 
-        // Add waypoint to trip
-        WaypointLinkToPlacesDto waypointLinkDto = waypointService.addNewWaypoints(waypointDto, tripId);
+        // Fetch waypoint from cache or DB, or saves if nothing returned
+        WaypointEntity waypoint = waypointService.fetchWaypoint(waypointDto);
 
-        tripPlacesRepository.save(new TripPlacesEntity(tripId, waypointLinkDto.getWaypointId(), waypointDto.getVisitOrder()));
+        // Link waypoint to trip
+        tripPlacesRepository.save(new TripPlacesEntity(tripId, waypoint.getWaypointId(), waypointDto.getVisitOrder()));
     }
 
     public void deleteWaypoint(Long tripId, Long waypointId, Long requesterId) {
