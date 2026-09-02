@@ -5,33 +5,26 @@
 <head>
 
     <meta charset="UTF-8">
-    <link rel = "stylesheet" href = "../style/style.css">
+    <link rel = "stylesheet" href = "../style/LoginRegister.css">
     <script src = "../script/register.js" defer> </script>
 
 </head>
 
 <body>
 
-<div id="registrationPage">
+<div id="authPage">
     <h1> Create new account </h1>
-    <div id = "createUsername">
-        <input type="text" id="username" placeholder="Enter new username">
-    </div>
-    <div id = "createPassword">
-        <input type="text" id="password" placeholder="Enter new password">
-    </div>
-    <div id = "confirmPassword">
-        <input type="text" id="repeatedPassword" placeholder="Confirm password">
-    </div>
-    <div id = "createEmail">
-        <input type="text" id="email" placeholder="Enter new email">
-    </div>
 
-    <button onclick="registerAccount()">Register account</button>
+    <input type="text" id="usernameEntry" placeholder="Create your username">
+    <input id="passwordEntry" type="password" placeholder="Create your password" />
+    <input type="password" id="confirmPassword" placeholder="Confirm password">
+    <input id="emailEntry" type="email" placeholder="Enter your email" />
 
+    <button id = "authButton" onclick="registerAccount()">Register account</button>
+
+    <p class = "authLink">
+        Already have an account?<a href="./login.html"> Sign in Here</a>
+    </p>
 </div>
-
-<p>Already have an account?<a href="./login.html"> Sign in Here</a></p>
-
 </body>
 </html>
