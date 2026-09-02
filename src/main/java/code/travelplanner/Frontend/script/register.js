@@ -1,16 +1,13 @@
 async function registerAccount() {
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const repeatedPassword = document.getElementById("repeatedPassword").value;
-    const email = document.getElementById("email").value;
-    const registrationUI = document.getElementById("registrationPage");
+    const username = document.getElementById("usernameEntry").value;
+    const password = document.getElementById("passwordEntry").value;
+    const repeatedPassword = document.getElementById("confirmPassword").value;
+    const email = document.getElementById("emailEntry").value;
 
     if (repeatedPassword === password) {
         try {
-            console.log("Javascript code");
-            console.log("Username: ", username);
-            console.log("Password: ", password);
+
             const response = await fetch("http://localhost:8080/travelplanner/register", {
                 method: "POST",
                 // The actual data to be sent to the server
