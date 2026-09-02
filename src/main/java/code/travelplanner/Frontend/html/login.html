@@ -5,27 +5,24 @@
 <head>
 
     <meta charset="UTF-8">
-    <link rel = "stylesheet" href = "../style/style.css">
+    <link rel = "stylesheet" href = "../style/LoginRegister.css">
     <script src = "../script/login.js" defer> </script>
 
 </head>
 
 <body>
 
-<div id="loginPage">
-    <h1> Login to your account </h1>
-    <div id = "emailEntry">
-        <input type="text" id="email" placeholder="Enter your existing email">
-    </div>
-    <div id = "passwordEntry">
-        <input type="text" id="password" placeholder="Enter your existing password">
-    </div>
+<div id="authPage">
+    <h1 class = "authTitle"> Login to your account </h1>
 
-    <button onclick="loginToAccount()">Login to account</button>
+    <input id="emailEntry" type="email" placeholder="Enter your existing email" />
+    <input id="passwordEntry" type="password" placeholder="Enter your existing password" />
 
+    <button id = "authButton" onclick="loginToAccount()">Login to account</button>
+
+    <p class = "authLink">
+        Haven't got an account?<a href="./register.html"> Register Now</a>
+    </p>
 </div>
-
-<p>Haven't got an account?<a href="./register.html"> Register Now</a></p>
-
 </body>
 </html>
