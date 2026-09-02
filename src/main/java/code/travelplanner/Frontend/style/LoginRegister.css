@@ -1,0 +1,128 @@
+/* ---------- Google Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ---------- Tokens ---------- */
+:root {
+    --teal:        #1a9ea0;
+    --teal-dark:   #157f81;
+    --bg:          #eceef8;
+    --card-bg:     #ffffff;
+    --input-bg:    #f4f5fb;
+    --text-main:   #111827;
+    --text-muted:  #6b7280;
+    --radius-card: 1.25rem;
+    --radius-input: 0.65rem;
+    --radius-btn:  0.75rem;
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    background: var(--bg);
+}
+
+/* ---------- Full-page centre ---------- */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* ---------- Card ---------- */
+#authPage {
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    padding: 2.75rem 2.5rem 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.07);
+}
+
+/* ---------- Heading ---------- */
+.authTitle {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 1.75rem;
+    line-height: 1.1;
+}
+
+/* ---------- Inputs ---------- */
+#emailEntry, #passwordEntry, #confirmPassword, #usernameEntry {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--input-bg);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+    margin-bottom: 0.85rem;
+    display: block;
+}
+
+#emailEntry::placeholder, #passwordEntry::placeholder, #confirmPassword::placeholder, #usernameEntry::placeholder {
+    color: var(--text-muted);
+}
+
+#emailEntry:focus, #passwordEntry:focus, #confirmPassword:focus, #usernameEntry:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26, 158, 160, 0.15);
+    background: #ffffff;
+}
+
+/* ---------- Submit button ---------- */
+#authButton {
+    width: 100%;
+    padding: 0.9rem;
+    margin-top: 0.5rem;
+    background: var(--teal);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-btn);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 180ms ease, transform 120ms ease;
+}
+
+#authButton:hover,
+#authButton:focus-visible {
+    background: var(--teal-dark);
+    outline: none;
+}
+
+#authButton:active {
+    transform: scale(0.985);
+}
+
+/* ---------- Footer link ---------- */
+.authLink {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.authLink a {
+    color: var(--teal);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.authLink a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+}
