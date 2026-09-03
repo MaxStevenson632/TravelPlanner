@@ -65,6 +65,7 @@ export async function loadUserTripsAndName() {
 
             li.className = 'tripListItem';
             li.dataset.tripId = trip.id;
+            li.dataset.userRole = trip.role;
 
             // Different CSS classes for each field
             li.innerHTML = `
