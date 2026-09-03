@@ -11,6 +11,7 @@ import { editTripMember } from "./editMember.js";
 import {fetchPlaces} from './Map/mapSearch.js';
 import { handleReorderKeydown, displayWaypointForOrdering } from "./addWaypoint.js";
 import {waypointDeleteMode, exitWaypointDeleteMode, deleteWaypoint} from "./deleteWaypoint.js";
+import {deleteTripMode, exitTripDeleteMode, deleteTrip} from "./deleteTrip.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -61,6 +62,10 @@ tripListContainer.addEventListener('click', async (event) => {
 
     tripId = clickedItem.dataset.tripId;
     if (!tripId) {
+        return;
+    }
+
+    if (deleteMode) {
         return;
     }
 
@@ -115,7 +120,7 @@ placeInput.addEventListener('input', (event) => {
     }
 
     // Wait 1000ms per keystroke to stay within Nominatim's 1 req/sec policy
-    debounceTimer = setTimeout(() => fetchPlaces(query, placeInput), 400);
+    debounceTimer = setTimeout(() => fetchPlaces(query, placeInput), 600);
 });
 
 // User clicks to add waypoint to trip
@@ -203,6 +208,43 @@ document.getElementById("detailPeopleList").addEventListener("click", async(even
     deleteMember.exitDeleteMode();
 });
 
+// Owner clicks on the delete trip button
+document.getElementById("deleteTripBtn").addEventListener("click", () => {
+
+    if (deleteMode) {
+        deleteMode = false;
+        exitTripDeleteMode();
+
+    } else {
+        deleteTripMode();
+        deleteMode = true;
+    }
+});
+
+// Owner clicks on a trip to delete them
+document.getElementById("tripList").addEventListener("click", async(event) => {
+
+    // Must be in delete mode
+    if (!deleteMode) {
+        return;
+    }
+
+    const row = event.target.closest(".tripListItem.delete-mode");
+    const memberId = row.dataset.tripId;
+
+    // Remove row before api call - optimistic approach
+    row.remove();
+
+    // delete trip in DB
+    const response = await deleteTrip(memberId, tripId);
+
+    // Re-render the people list - if successful, trip removed and if not trip re-appears
+    await tripService.getMapData(tripId);
+
+    deleteMember.exitDeleteMode();
+});
+
+// User clicks on another user's role badge to edit role
 document.getElementById("detailPeopleList").addEventListener("click", async(event) => {
 
     if (deleteMode) {
@@ -222,8 +264,6 @@ document.getElementById("detailPeopleList").addEventListener("click", async(even
     } else if (currentRole === "VIEWER") {
         newRole = "MEMBER";
     }
-
-    console.log(newRole);
 
     let response = null;
 
