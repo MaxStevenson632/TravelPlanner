@@ -73,6 +73,7 @@ export function showTripListPanel() {
     document.getElementById("usernameHeader").classList.remove("hidden");
     document.querySelector(".tripsHeading").classList.remove("hidden");
     document.getElementById("tripList").classList.remove("hidden");
+    document.getElementById("deleteTripBtn").classList.remove("hidden");
 
     document.querySelectorAll('.tripListItem.active').forEach(item => {
         item.classList.remove('active');
@@ -91,6 +92,7 @@ export function showTripDetailsPanel(clickedItem) {
 
     document.getElementById("usernameHeader").classList.add("hidden");
     document.querySelector(".tripsHeading").classList.add("hidden");
+    document.getElementById("deleteTripBtn").classList.add("hidden");
     tripListContainer.classList.add("hidden");
     tripDetailsPanel.classList.add("is-visible");
 }
