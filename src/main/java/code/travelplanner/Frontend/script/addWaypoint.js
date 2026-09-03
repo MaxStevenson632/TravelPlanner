@@ -1,7 +1,7 @@
 import { token } from './auth.js';
 import {sanitizedHTML} from "./utils.js";
 import {renderTripWaypointsAndMembers} from "./sidebarRenderer.js";
-import { selectedPlace } from './Map/mapSearch.js';
+import { selectedPlaceState } from './Map/mapSearch.js';
 
 let tripId = null;
 let activeWaypointElement = null;
@@ -46,15 +46,15 @@ export function handleReorderKeydown(event) {
 
         // Send waypoint data to backend
         saveWaypointsToTrip({
-            placeName: selectedPlace.display_name.split(',')[0],
-            latitude: parseFloat(selectedPlace.lat),
-            longitude: parseFloat(selectedPlace.lon),
+            placeName: selectedPlaceState.selectedPlace.display_name.split(',')[0],
+            latitude: parseFloat(selectedPlaceState.selectedPlace.lat),
+            longitude: parseFloat(selectedPlaceState.selectedPlace.lon),
             visitOrder: newWaypointIndex + 1
         });
 
         // Reset for next waypoint addition
         activeWaypointElement = null;
-        selectedPlace = null;
+        selectedPlaceState.selectedPlace = null;
 
         // User cancels adding new waypoint
     } else if (event.key === 'Backspace' || event.key === 'Delete') {
@@ -82,9 +82,10 @@ async function saveWaypointsToTrip(waypointData) {
         });
 
         if (!response.ok) {
-            throw new Error("Failed to save waypoint");
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
         } else {
-
+            console.log(response);
             // Render waypoints again
             renderTripWaypointsAndMembers(tripId);
         }
@@ -95,7 +96,7 @@ async function saveWaypointsToTrip(waypointData) {
 
 export function displayWaypointForOrdering(passedTripId) {
 
-    if (!selectedPlace) {
+    if (!selectedPlaceState.selectedPlace) {
         return;
     }
 
@@ -111,7 +112,7 @@ export function displayWaypointForOrdering(passedTripId) {
     // Display the new waypoint within list of existing waypoints
     activeWaypointElement.innerHTML = `
     <span class = "waypoint-icon"></span>
-    <span class = "waypoint-name"> ${sanitizedHTML(selectedPlace.display_name.split(',')[0])}</span>
+    <span class = "waypoint-name"> ${sanitizedHTML(selectedPlaceState.selectedPlace.display_name.split(',')[0])}</span>
         `;
 
     waypointList.appendChild(activeWaypointElement);
