@@ -2,7 +2,6 @@ import { token } from "./auth.js";
 
 export async function deleteMember(userId, tripId) {
 
-    console.log("In function");
     try {
         const response = await fetch(`http://localhost:8080/travelplanner/${tripId}/members/deleteMember/${userId}`,
             {
@@ -15,7 +14,9 @@ export async function deleteMember(userId, tripId) {
         );
 
         if (!response.ok) {
-            alert("Issue removing member from trip");
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
+            return;
         }
 
     } catch (error) {
