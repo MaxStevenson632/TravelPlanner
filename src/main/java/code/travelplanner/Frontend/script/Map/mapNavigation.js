@@ -1,10 +1,24 @@
+import {token} from "../auth.js";
+
 export async function renderRouteBetweenTwoPoints(longitudeA, latitudeA, longitudeB, latitudeB, map, routeSegmentId) {
 
-    // Mapbox directions API URL
-    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${longitudeA},${latitudeA};${longitudeB},${latitudeB}?geometries=geojson&access_token=${MAPBOX_APIKEY}`;
-
     try {
-        const response = await fetch(url);
+        const response = await fetch(`http://localhost:8080/travelplanner/map/getRoute?longitudeA=${longitudeA}
+        &latitudeA=${latitudeA}&longitudeB=${longitudeB}&latitudeB=${latitudeB}`, {
+
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
+            return;
+        }
+
         const data = await response.json();
 
         if (!data.routes || data.routes.length === 0) {
