@@ -25,6 +25,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final Map<String, Bucket> searchBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> externalApiBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> generalBuckets = new ConcurrentHashMap<>();
+    private final Map<String, Bucket> RouteBuckets  = new ConcurrentHashMap<>();
 
     protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response
             , FilterChain filterChain) throws ServletException, IOException {
@@ -35,25 +36,32 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
         // Unauthenticated endpoints - per-IP ceiling to stop bot floods
         // 5 requests per minute
-        if (path.contains("/login") || path.contains("/register")) {
+        if (path.contains("/login") || path.contains("/register") || path.contains("/verify")) {
             String ipKey = getClientIp(request);
             bucket = authBuckets.computeIfAbsent(ipKey, k -> createBucket(5, Duration.ofMinutes(1)));
         }
 
         // High-cost database searches
         // 20 requests per minute
-        else if (path.contains("/users/*/search") || path.contains("/retrieve-trips")) {
+        else if (path.contains("/users/*/search") || path.contains("/retrieve-trips") || path.contains("/waypoint/search")
+        || path.contains("/createTrip")) {
             bucket = searchBuckets.computeIfAbsent(clientKey, k -> createBucket(20, Duration.ofMinutes(1)));
         }
 
         // Contains external api which could cost money if limit exceeded
-        else if (path.contains("*/map-data")) {
-            bucket = externalApiBuckets.computeIfAbsent(clientKey, k -> createBucket(10, Duration.ofMinutes(1)));
+        else if (path.contains("/*/map-data") || path.contains("/*/addWaypoint") || path.contains("/map/getMapToken")) {
+            bucket = externalApiBuckets.computeIfAbsent(clientKey, k -> createBucket(15, Duration.ofMinutes(1)));
+        }
+
+        // Getting the route for the trip, one request can contain many uses of this endpoint, so generous amount
+        else if (path.contains("/map/getRoute")) {
+            bucket = externalApiBuckets.computeIfAbsent(clientKey, k -> createBucket(60, Duration.ofMinutes(1)));
         }
 
         // General endpoints
+        // single row operations like editing, deleting and adding members & waypoints
         else {
-            bucket = generalBuckets.computeIfAbsent(clientKey, k -> createBucket(20, Duration.ofMinutes(1)));
+            bucket = generalBuckets.computeIfAbsent(clientKey, k -> createBucket(100, Duration.ofMinutes(1)));
         }
 
         if (bucket.tryConsume(1)) {
@@ -106,6 +114,5 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
         // Get IP address of the TCP connection directly interacting with the app
         return request.getRemoteAddr();
-
     }
 }
