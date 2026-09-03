@@ -16,7 +16,7 @@ export async function getMapData(tripId) {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.log(errorData);
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
         }
 
         return tripData;
