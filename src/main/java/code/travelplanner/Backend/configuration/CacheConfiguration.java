@@ -40,7 +40,8 @@ public class CacheConfiguration {
 
         // Trip list cache, data lives for 2 hours
         // Cannot be until max-memory, lots of unused trips will be stored alongside hot data
-        cacheConfigurations.put("tripList", configuration.entryTtl(Duration.ofHours(2)));
+        // Cleared every week
+        cacheConfigurations.put("tripList", configuration.entryTtl(Duration.ofHours(168)));
 
         // Results from searching a waypoint cache, store until memory is full
         cacheConfigurations.put("waypointSearchResults",  configuration.entryTtl(Duration.ZERO));
