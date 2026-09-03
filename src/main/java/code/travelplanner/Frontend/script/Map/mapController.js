@@ -5,9 +5,9 @@ import { renderRouteBetweenTwoPoints } from './mapNavigation.js';
 
 export let mapInstance = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async() => {
 
-    mapInstance = createMap();
+    mapInstance = await createMap();
 });
 
 export function renderTripMarkersAndRouteOnMap(tripId) {
