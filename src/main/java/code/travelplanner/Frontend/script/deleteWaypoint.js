@@ -30,7 +30,9 @@ export async function deleteWaypoint(tripId, waypointId) {
         });
 
         if (!response.ok) {
-            console.error("Failed to delete waypoint");
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
+            return;
         }
 
         return response.ok;
