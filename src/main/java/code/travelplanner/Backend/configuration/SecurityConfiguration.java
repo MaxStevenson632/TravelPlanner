@@ -61,8 +61,9 @@ public class SecurityConfiguration {
                 // Logged-in users can access the following endpoints
                 .requestMatchers("/travelplanner/createTrip","/travelplanner/*/map-data", "/travelplanner/retrieve-trips",
                         "/travelplanner/*/members/addMember/*", "/travelplanner/users/*/search", "/travelplanner/waypoint/search",
-                        "/travelplanner/*/addWaypoint", "/travelplanner/*/deleteLinkedWaypoint/*",
-                        "/travelplanner/*/members/deleteMember/*", "/travelplanner/*/members/editMemberRole/*").authenticated()
+                        "/travelplanner/*/addWaypoint", "/travelplanner/*/deleteLinkedWaypoint/*", "/travelplanner/map/getMapToken",
+                        "/travelplanner/*/members/deleteMember/*", "/travelplanner/*/members/editMemberRole/*",
+                        "/travelplanner/map/getRoute").authenticated()
                 // Any other URL is blocked unless user has logged in successfully
                 .anyRequest().authenticated());
 
