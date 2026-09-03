@@ -24,6 +24,11 @@ export async function fetchPlaces(query, placeInput) {
         const places = await response.json();
         renderSuggestions(places);
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
+        }
+
     } catch (error) {
         console.error("Geocoding failed", error);
     }
