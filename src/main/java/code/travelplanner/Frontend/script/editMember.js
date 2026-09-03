@@ -14,7 +14,9 @@ export async function editTripMember(userId, tripId, newRole) {
         });
 
         if (!response.ok) {
-            alert("Error switching member's role");
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
+            return;
         }
 
         return response.ok;
