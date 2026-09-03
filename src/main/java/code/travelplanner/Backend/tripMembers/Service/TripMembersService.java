@@ -28,7 +28,7 @@ public class TripMembersService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "tripList", key = "#memberToDeleteId"),
+            @CacheEvict(value = "tripList", key = "#memberToAddId"),
     })
     public void addPersonToTrip(Long tripId, Long requesterId, String role, Long memberToAddId) {
 
@@ -79,6 +79,9 @@ public class TripMembersService {
         tripMembersRepository.deleteByIdUserId(memberToDeleteId, tripId);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "tripList", key = "#personToEditId"),
+    })
     public void editPersonRole(Long tripId, Long requesterId, String newRole, Long personToEditId)  {
 
         // Verify user belongs to trip
