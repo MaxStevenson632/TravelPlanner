@@ -30,7 +30,8 @@ async function registerAccount() {
                 window.location.href = "./login.html";
 
             } else {
-                alert("Email already associated with an account");
+                const errorData = await response.json();
+                alert(errorData.message || errorData.error || "An unexpected error occurred");
             }
 
         } catch (error) {
