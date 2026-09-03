@@ -666,36 +666,6 @@ input:focus {
     transform: translateX(-50%) scale(0.98);
 }
 
-/* Delete Member Button Styles */
-#deleteMemberBtn {
-    background: #e53e3e !important;
-    color: #ffffff !important;
-}
-
-#deleteMemberBtn:hover,
-#deleteMemberBtn:focus-visible {
-    background: #c53030 !important;
-}
-
-/* Active state for Delete Button */
-#deleteMemberBtn.is-active {
-    background: #9b2c2c !important;
-    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.4);
-}
-
-/* Red outline and hover feedback on member rows when delete mode is active */
-.person-row.delete-mode {
-    border-color: #e53e3e !important;
-    outline: 2px solid #e53e3e !important;
-    outline-offset: -2px;
-    cursor: pointer;
-    transition: outline 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.person-row.delete-mode:hover {
-    background-color: rgba(229, 62, 62, 0.12) !important; /* Visual cue when hovering over a deletable row */
-}
-
 /* ---------- Add Member Modal Overlay ---------- */
 /* ---------- Member Search Overlay ---------- */
 #memberSearchOverlay {
@@ -794,23 +764,31 @@ input:focus {
 }
 
 /* Delete Waypoint Button Styles */
-#deleteWaypointBtn {
+#deleteWaypointBtn, #deleteTripBtn, #deleteMemberBtn {
     background: #e53e3e !important;
     color: #ffffff !important;
 }
 
 #deleteWaypointBtn:hover,
-#deleteWaypointBtn:focus-visible {
+#deleteWaypointBtn:focus-visible,
+#deleteTripBtn:focus-visible,
+#deleteTripBtn:hover,
+#deleteMemberBtn:hover,
+#deleteMemberBtn:focus-visible {
     background: #c53030 !important;
 }
 
-#deleteWaypointBtn.is-active {
+#deleteWaypointBtn.is-active,
+#deleteTripBtn.is-active,
+#deleteMemberBtn.is-active {
     background: #9b2c2c !important;
     box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.4);
 }
 
 /* Red outline highlight on waypoint items when delete mode is active */
-.waypoint-item.delete-mode {
+.waypoint-item.delete-mode,
+.tripListItem.delete-mode,
+.person-row.delete-mode {
     border: 2px solid #e53e3e !important;
     outline: 2px solid #e53e3e !important;
     outline-offset: -2px;
@@ -818,6 +796,8 @@ input:focus {
     transition: outline 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.waypoint-item.delete-mode:hover {
+.waypoint-item.delete-mode:hover,
+.tripListItem.delete-mode:hover,
+.person-row.delete-mode:hover {
     background-color: rgba(229, 62, 62, 0.12) !important;
 }
