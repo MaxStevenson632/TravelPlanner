@@ -81,6 +81,12 @@ async function searchUsers(query, resultsList, tripId, onMemberAdded) {
                 }
         );
 
+        if (response.status === 429) {
+            const errorData = await response.json();
+            alert(errorData.message || errorData.error || "An unexpected error occurred");
+            return;
+        }
+
         if (!response.ok) {
             resultsList.innerHTML = '<li class = "member-result-error"> Search failed. Try again. </li>';
             return;
