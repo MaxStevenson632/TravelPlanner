@@ -13,6 +13,7 @@ import code.travelplanner.Backend.trip.Entity.TripPlacesEntity;
 import code.travelplanner.Backend.trip.Repository.TripPlacesRepository;
 import code.travelplanner.Backend.trip.Repository.TripRepository;
 import code.travelplanner.Backend.tripMembers.Dto.MemberInfoDto;
+import code.travelplanner.Backend.tripMembers.Entity.Role;
 import code.travelplanner.Backend.tripMembers.Entity.TripMembersEntity;
 import code.travelplanner.Backend.tripMembers.Repository.TripMembersRepository;
 import code.travelplanner.Backend.tripMembers.Service.TripMembersService;
@@ -23,9 +24,11 @@ import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import code.travelplanner.Backend.waypoint.Repository.WaypointRepository;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +44,12 @@ public class TripService {
     private final TripMembersRepository tripMembersRepository;
     private final TripPlacesRepository  tripPlacesRepository;
     private final WaypointRepository  waypointRepository;
+    private final CacheManager cacheManager;
 
     public TripService(TripRepository tripRepository,  TripMembersService tripMembersService,  UserRepository userRepository,
                        WaypointService waypointService, TripMembersRepository tripMembersRepository,
-                       TripPlacesRepository tripPlacesRepository,  WaypointRepository waypointRepository) {
+                       TripPlacesRepository tripPlacesRepository,  WaypointRepository waypointRepository,
+                       CacheManager cacheManager) {
         this.tripRepository = tripRepository;
         this.tripMembersService = tripMembersService;
         this.userRepository = userRepository;
@@ -52,6 +57,7 @@ public class TripService {
         this.tripMembersRepository = tripMembersRepository;
         this.tripPlacesRepository = tripPlacesRepository;
         this.waypointRepository = waypointRepository;
+        this.cacheManager = cacheManager;
     }
 
     @Transactional
@@ -159,5 +165,30 @@ public class TripService {
         tripDataList.setTripDataDto(tripDataDtos);
 
         return tripDataList;
+    }
+
+    public void deleteTrip(Long requesterId, Long tripId) {
+
+        // Verify user belongs to trip
+        TripMembersEntity memberCheck = tripMembersRepository.findByIdTripIdAndIdUserId(tripId, requesterId)
+                .orElseThrow(() -> new IllegalArgumentException("Error matching user with trip"));
+
+        // Verify user has permission to delete a trip
+        if (!(memberCheck.getMemberRole().equals(Role.OWNER))) {
+            throw new  IllegalArgumentException("User does not have permission to add member");
+        }
+
+        // Get all member ids of the members belonging to trip
+        List<Long> memberIds = tripMembersRepository
+                .findByIdTripId(tripId)
+                .stream()
+                .map(member -> member.getId().getUserId())
+                .toList();
+
+        // Delete trip
+        tripRepository.deleteById(tripId);
+
+        // Evict each member's tripList cache
+        memberIds.forEach(memberId -> cacheManager.getCache("tripList").evict(memberId));
     }
 }
