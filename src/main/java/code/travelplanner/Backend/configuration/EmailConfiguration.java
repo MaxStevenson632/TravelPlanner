@@ -1,7 +1,12 @@
 package code.travelplanner.Backend.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
+
+import java.util.Properties;
 
 @Component
 public class EmailConfiguration {
@@ -15,41 +20,23 @@ public class EmailConfiguration {
     @Value("${spring.mail.password}")
     private String password;
 
-    public String getHost() {
-        return host;
-    }
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-    public void setHost(String host) {
-        this.host = host;
-    }
+        mailSender.setHost(host);
+        mailSender.setPort(port);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
 
-    public Integer getPort() {
-        return port;
-    }
+        // Use the properties for mail smtp
+        Properties props = mailSender.getJavaMailProperties();
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.required", "true");
+        props.put("mail.smtp.sll.enable", "false");
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "EmailConfiguration [host=" + host + ", port=" + port + ", username=" + username + ", password="
-                + password + "]";
+        return mailSender;
     }
 }
