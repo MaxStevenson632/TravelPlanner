@@ -27,7 +27,7 @@ async function registerAccount() {
                 const data = await response.json();
                 // Redirect to /home page after successful login
                 console.log("Registration successful");
-                window.location.href = "./login.html";
+                window.location.href = "./index.html";
 
             } else {
                 const errorData = await response.json();
