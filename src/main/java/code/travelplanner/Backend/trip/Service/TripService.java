@@ -61,6 +61,7 @@ public class TripService {
     }
 
     @Transactional
+    @CacheEvict(value = "tripList", key = "#userId")
     public ResponseEntity<?> createTrip (NewTripDto newTripData, Long userId) {
 
         TripEntity tripEntity = new TripEntity(newTripData.getTitle(),
