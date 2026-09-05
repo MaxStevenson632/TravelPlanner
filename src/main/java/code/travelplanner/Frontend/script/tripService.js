@@ -116,11 +116,17 @@ export async function createTrip(event) {
                 "Authorization": `Bearer ${token}`
             }
         })
+        console.log("Create trip status:", response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+
+        console.log("Trip created successfully");
 
     } catch (e) {
-        const errorData = await response.json();
-        console.log(errorData);
-        alert(errorData.message || errorData.error || "An unexpected error occurred");
+        console.error("Create trip failed:", e);
     }
 }
 
