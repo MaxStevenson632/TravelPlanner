@@ -1,1 +1,1 @@
-export const API_BASE_URL = "https://travelplanner-backend-vd34.onrender.com/";
+export const API_BASE_URL = "https://travelplanner-backend-vd34.onrender.com";
