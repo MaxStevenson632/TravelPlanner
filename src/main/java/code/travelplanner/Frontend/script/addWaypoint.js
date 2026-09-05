@@ -1,4 +1,5 @@
 import { token } from './auth.js';
+import {API_BASE_URL} from './configuration.js'
 import {sanitizedHTML} from "./utils.js";
 import {renderTripWaypointsAndMembers} from "./sidebarRenderer.js";
 import { selectedPlaceState } from './Map/mapSearch.js';
@@ -72,7 +73,7 @@ export function handleReorderKeydown(event) {
 async function saveWaypointsToTrip(waypointData) {
 
     try {
-        const response = await fetch(`http://localhost:8080/travelplanner/${tripId}/addWaypoint`, {
+        const response = await fetch(`${API_BASE_URL}/travelplanner/${tripId}/addWaypoint`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
