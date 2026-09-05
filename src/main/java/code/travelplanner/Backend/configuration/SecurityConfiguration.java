@@ -97,7 +97,8 @@ public class SecurityConfiguration {
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         // Allow backend to talk to front end
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:63342"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:63342",
+                "https://travel-planner-dcpd.vercel.app"));
         // Allow certain actions for the frontend
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
