@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RequestMapping("/travelplanner/{tripId}")
 @Controller
-@CrossOrigin(origins = "http://localhost:63342", allowCredentials = "true")
 public class TripPlacesController {
 
     private final TripPlacesService tripPlacesService;

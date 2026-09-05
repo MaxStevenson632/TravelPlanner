@@ -11,7 +11,6 @@ import java.util.List;
 
 @RequestMapping("/travelplanner")
 @RestController
-@CrossOrigin(origins = "http://localhost:63342", allowCredentials = "true")
 public class WaypointController {
 
     private final GeocodingService geocodingService;

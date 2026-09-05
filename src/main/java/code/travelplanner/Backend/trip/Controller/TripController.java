@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 
 @RequestMapping("/travelplanner")
 @Controller
-@CrossOrigin(origins = "http://localhost:63342", allowCredentials = "true")
 public class TripController {
 
     private final TripService tripService;
