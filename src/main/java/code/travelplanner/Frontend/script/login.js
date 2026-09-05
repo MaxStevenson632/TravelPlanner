@@ -37,3 +37,5 @@ async function loginToAccount() {
         console.log("Error logging into account", error);
     }
 }
+
+window.loginToAccount = loginToAccount;
