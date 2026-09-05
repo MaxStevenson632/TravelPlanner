@@ -1,3 +1,5 @@
+import {API_BASE_URL} from "./configuration.js";
+
 async function registerAccount() {
 
     const username = document.getElementById("usernameEntry").value;
@@ -8,7 +10,7 @@ async function registerAccount() {
     if (repeatedPassword === password) {
         try {
 
-            const response = await fetch("http://localhost:8080/travelplanner/register", {
+            const response = await fetch(`${API_BASE_URL}/travelplanner/register`, {
                 method: "POST",
                 // The actual data to be sent to the server
                 body:JSON.stringify({

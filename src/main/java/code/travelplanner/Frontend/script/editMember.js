@@ -1,10 +1,11 @@
 import {token} from "./auth.js";
+import { API_BASE_URL } from "./configuration.js";
 
 export async function editTripMember(userId, tripId, newRole) {
 
     try {
 
-        const response = await fetch(`http://localhost:8080/travelplanner/${tripId}/members/editMemberRole/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/travelplanner/${tripId}/members/editMemberRole/${userId}`, {
             method: 'PUT',
             headers: {
                 "Authorization" : `Bearer ${token}`,

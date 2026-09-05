@@ -1,3 +1,5 @@
+import { API_BASE_URL } from './configuration.js';
+
 async function loginToAccount() {
     const email = document.getElementById("emailEntry").value;
     const password = document.getElementById("passwordEntry").value;
@@ -5,7 +7,7 @@ async function loginToAccount() {
     try {
 
         // Wait for response, a raw data stream
-        const response = await fetch("http://localhost:8080/travelplanner/login", {
+        const response = await fetch(`${API_BASE_URL}/travelplanner/login`, {
             method: "POST",
             body: JSON.stringify({
                 email: email,

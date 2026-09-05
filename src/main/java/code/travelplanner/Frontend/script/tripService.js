@@ -1,10 +1,11 @@
 import { token } from './auth.js';
+import { API_BASE_URL } from './configuration.js';
 import { sanitizedHTML } from "./utils.js";
 
 export async function getMapData(tripId) {
 
     try {
-        const response = await fetch(`http://localhost:8080/travelplanner/${tripId}/map-data`, {
+        const response = await fetch(`${API_BASE_URL}/travelplanner/${tripId}/map-data`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -29,7 +30,7 @@ export async function getMapData(tripId) {
 export async function loadUserTripsAndName() {
 
     try {
-        const response = await fetch("http://localhost:8080/travelplanner/retrieve-trips", {
+        const response = await fetch(`${API_BASE_URL}/travelplanner/retrieve-trips`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -101,7 +102,7 @@ export async function createTrip(event) {
     let response = null;
 
     try {
-        response = await fetch("http://localhost:8080/travelplanner/createTrip",  {
+        response = await fetch(`${API_BASE_URL}/travelplanner/createTrip`,  {
             method: "POST",
             body: JSON.stringify({
                 title: title,

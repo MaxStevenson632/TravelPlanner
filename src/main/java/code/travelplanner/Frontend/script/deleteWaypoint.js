@@ -1,4 +1,5 @@
 import {token} from "./auth.js";
+import { API_BASE_URL } from "./configuration.js";
 
 const deleteWaypointBtn = document.getElementById('deleteWaypointBtn');
 
@@ -21,7 +22,7 @@ export function waypointDeleteMode() {
 export async function deleteWaypoint(tripId, waypointId) {
 
     try {
-        const response  = await fetch(`http://localhost:8080/travelplanner/${tripId}/deleteLinkedWaypoint/${waypointId}`, {
+        const response  = await fetch(`${API_BASE_URL}/travelplanner/${tripId}/deleteLinkedWaypoint/${waypointId}`, {
             method: 'DELETE',
             headers: {
                 "Authorization" : `Bearer ${token}`,

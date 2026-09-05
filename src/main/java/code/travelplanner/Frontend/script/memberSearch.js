@@ -1,4 +1,5 @@
 import { token } from './auth.js';
+import { API_BASE_URL } from './configuration.js'
 import { getInitials } from './utils.js';
 
 let searchTimeout = null;
@@ -71,7 +72,7 @@ async function searchUsers(query, resultsList, tripId, onMemberAdded) {
     resultsList.innerHTML = '<li class = "member-result-loading"> Searching... </li>';
 
     try {
-        const response = await fetch(`http://localhost:8080/travelplanner/users/${tripId}/search?query=${query}`,
+        const response = await fetch(`${API_BASE_URL}/travelplanner/users/${tripId}/search?query=${query}`,
             {
                 method: "GET",
                 headers: {
@@ -178,7 +179,7 @@ function renderResults(users, resultsList, tripId, onMemberAdded) {
 async function addPerson(tripId, userId, role, onMemberAdded) {
 
     try {
-        const response = await fetch( `http://localhost:8080/travelplanner/${tripId}/members/addMember/${userId}`, {
+        const response = await fetch( `${API_BASE_URL}/travelplanner/${tripId}/members/addMember/${userId}`, {
             method: "POST",
             headers: {
                 "Authorization" : `Bearer ${token}`,

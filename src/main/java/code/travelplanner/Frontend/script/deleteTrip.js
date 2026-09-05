@@ -1,9 +1,10 @@
 import {token} from "./auth.js";
+import { API_BASE_URL } from './configuration.js';
 
 export async function deleteTrip(userId, tripId) {
 
     try {
-        const response = await fetch(`http://localhost:8080/travelplanner/${tripId}/deleteTrip`,
+        const response = await fetch(`${API_BASE_URL}/travelplanner/${tripId}/deleteTrip`,
             {
                 method: 'DELETE',
                 headers: {
