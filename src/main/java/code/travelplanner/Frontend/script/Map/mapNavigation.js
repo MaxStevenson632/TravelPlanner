@@ -1,9 +1,10 @@
 import {token} from "../auth.js";
+import {API_BASE_URL} from '../configuration.js';
 
 export async function renderRouteBetweenTwoPoints(longitudeA, latitudeA, longitudeB, latitudeB, map, routeSegmentId) {
 
     try {
-        const response = await fetch(`http://localhost:8080/travelplanner/map/getRoute?longitudeA=${longitudeA}
+        const response = await fetch(`${API_BASE_URL}/travelplanner/map/getRoute?longitudeA=${longitudeA}
         &latitudeA=${latitudeA}&longitudeB=${longitudeB}&latitudeB=${latitudeB}`, {
 
             method: 'GET',

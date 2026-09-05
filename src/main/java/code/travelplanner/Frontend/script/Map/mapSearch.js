@@ -1,7 +1,7 @@
-import { token } from '../auth.js';
+import {token} from '../auth.js';
+import {API_BASE_URL} from '../configuration.js';
 import {mapInstance} from './mapController.js';
-import {sanitizedHTML} from "../utils.js";
-import {renderTripWaypointsAndMembers} from "../sidebarRenderer.js";
+
 
 
 let currentMarker = null;
@@ -14,7 +14,7 @@ export const selectedPlaceState = {
 export async function fetchPlaces(query, placeInput) {
 
     try {
-        const response = await fetch(`http://localhost:8080/travelplanner/waypoint/search?query=${encodeURIComponent(query)}`, {
+        const response = await fetch(`${API_BASE_URL}/travelplanner/waypoint/search?query=${encodeURIComponent(query)}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

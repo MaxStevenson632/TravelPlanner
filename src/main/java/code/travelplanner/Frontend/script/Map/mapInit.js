@@ -1,4 +1,5 @@
 import {token} from "../auth.js";
+import {API_BASE_URL} from '../configuration.js';
 
 export async function createMap() {
 
@@ -31,7 +32,7 @@ export async function createMap() {
 async function getMapboxToken() {
 
     // Get mapbox token from backend
-    const response = await fetch('http://localhost:8080/travelplanner/map/getMapToken', {
+    const response = await fetch(`${API_BASE_URL}/travelplanner/map/getMapToken`, {
 
         method: 'GET',
         headers: {
