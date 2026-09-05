@@ -25,7 +25,7 @@ async function loginToAccount() {
             localStorage.setItem("token", data.token);
             console.log("Login successful");
             // Redirect to /home page after successful login
-            window.location.href = "home.html";
+            window.location.href = "/html/home.html";
 
         } else {
             const errorData = await response.json();
