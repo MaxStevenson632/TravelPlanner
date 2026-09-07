@@ -25,7 +25,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private final Map<String, Bucket> searchBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> externalApiBuckets = new ConcurrentHashMap<>();
     private final Map<String, Bucket> generalBuckets = new ConcurrentHashMap<>();
-    private final Map<String, Bucket> RouteBuckets  = new ConcurrentHashMap<>();
+    private final Map<String, Bucket> routeBuckets  = new ConcurrentHashMap<>();
 
     protected void doFilterInternal (HttpServletRequest request, HttpServletResponse response
             , FilterChain filterChain) throws ServletException, IOException {
@@ -43,19 +43,19 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
         // High-cost database searches
         // 20 requests per minute
-        else if (path.contains("/users/*/search") || path.contains("/retrieve-trips") || path.contains("/waypoint/search")
+        else if (path.matches("/users/*/search") || path.contains("/retrieve-trips") || path.contains("/waypoint/search")
         || path.contains("/createTrip")) {
             bucket = searchBuckets.computeIfAbsent(clientKey, k -> createBucket(20, Duration.ofMinutes(1)));
         }
 
         // Contains external api which could cost money if limit exceeded
-        else if (path.contains("/*/map-data") || path.contains("/*/addWaypoint") || path.contains("/map/getMapToken")) {
+        else if (path.matches("/*/map-data") || path.matches("/*/addWaypoint") || path.contains("/map/getMapToken")) {
             bucket = externalApiBuckets.computeIfAbsent(clientKey, k -> createBucket(15, Duration.ofMinutes(1)));
         }
 
         // Getting the route for the trip, one request can contain many uses of this endpoint, so generous amount
         else if (path.contains("/map/getRoute")) {
-            bucket = externalApiBuckets.computeIfAbsent(clientKey, k -> createBucket(60, Duration.ofMinutes(1)));
+            bucket = routeBuckets.computeIfAbsent(clientKey, k -> createBucket(60, Duration.ofMinutes(1)));
         }
 
         // General endpoints
