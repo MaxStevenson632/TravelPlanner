@@ -44,6 +44,12 @@ public class EmailService {
         // Spring Boot renders this text as html
         helper.setText(htmlContent, true);
 
-        mailSender.send(mimeMessage);
+        try {
+            mailSender.send(mimeMessage);
+            System.out.println("EMAIL SENT SUCCESSFULLY TO: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("EMAIL SENDING FAILED");
+            e.printStackTrace();
+        }
     }
 }
