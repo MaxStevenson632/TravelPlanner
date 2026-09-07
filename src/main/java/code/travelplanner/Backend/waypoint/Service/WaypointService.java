@@ -54,7 +54,7 @@ public class WaypointService {
         }
     }
 
-    @Cacheable(value = "waypoints", key = "#waypointDto.placeName")
+    @Cacheable(value = "waypointCoordinates", key = "#waypointDto.placeName")
     public WaypointEntity fetchWaypoint(WaypointMapDto waypointDto) {
 
         // Find the waypoint from cache or DB
