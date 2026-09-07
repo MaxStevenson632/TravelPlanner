@@ -44,3 +44,5 @@ async function registerAccount() {
         console.log("Password not the same");
     }
 }
+
+window.registerAccount = registerAccount;
