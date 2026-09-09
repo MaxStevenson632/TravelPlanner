@@ -4,8 +4,8 @@ import {API_BASE_URL} from '../configuration.js';
 export async function renderRouteBetweenTwoPoints(longitudeA, latitudeA, longitudeB, latitudeB, map, routeSegmentId) {
 
     try {
-        const response = await fetch(`${API_BASE_URL}/travelplanner/map/getRoute?longitudeA=${longitudeA}
-        &latitudeA=${latitudeA}&longitudeB=${longitudeB}&latitudeB=${latitudeB}`, {
+
+        const response = await fetch(`${API_BASE_URL}/travelplanner/map/getRoute?longitudeA=${longitudeA}&latitudeA=${latitudeA}&longitudeB=${longitudeB}&latitudeB=${latitudeB}`, {
 
             method: 'GET',
             headers: {
@@ -15,7 +15,7 @@ export async function renderRouteBetweenTwoPoints(longitudeA, latitudeA, longitu
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.text();
             alert(errorData.message || errorData.error || "An unexpected error occurred");
             return;
         }
