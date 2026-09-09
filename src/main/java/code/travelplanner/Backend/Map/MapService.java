@@ -8,13 +8,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class MapService {
 
-    @Value("${mapbox.api.token}")
-    private String mapboxKey;
+    @Value("${mapbox.api.frontend-token}")
+    private String mapboxKeyFrontend;
+
+    @Value("${mapbox.api.backend-token}")
+    private String mapboxKeyBackend;
+
     private final RestTemplate mapboxRestTemplate = new RestTemplate();
 
     public String getMapToken() {
 
-        return mapboxKey;
+        return mapboxKeyFrontend;
     }
 
     public String getDirections(double longitudeA, double latitudeA, double longitudeB, double latitudeB) {
@@ -22,7 +26,7 @@ public class MapService {
         try {
 
             // Clean token, replace unwanted characters with blank
-            String cleanToken = mapboxKey.replaceAll("[\"';\\s]", "").trim();
+            String cleanToken = mapboxKeyBackend.replaceAll("[\"';\\s]", "").trim();
 
             // Get directions and route in JSON
             String mapBoxUrl = UriComponentsBuilder.fromUriString("https://api.mapbox.com/directions/v5/mapbox/driving/")
