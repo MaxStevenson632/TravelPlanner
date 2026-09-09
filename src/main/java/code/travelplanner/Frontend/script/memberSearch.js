@@ -1,6 +1,8 @@
 import { token } from './auth.js';
 import { API_BASE_URL } from './configuration.js'
 import { getInitials } from './utils.js';
+import { getMapData } from './tripService.js';
+import { renderTripWaypointsAndMembers } from "./sidebarRenderer.js";
 
 let searchTimeout = null;
 
@@ -201,6 +203,8 @@ async function addPerson(tripId, userId, role, onMemberAdded) {
 
         // Close overlay
         closeOverlay();
+
+        renderTripWaypointsAndMembers(await getMapData(tripId));
 
     } catch (error) {
         console.error("Add member error", error);
