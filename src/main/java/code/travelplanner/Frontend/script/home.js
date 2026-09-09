@@ -31,6 +31,9 @@ const tripForm = document.getElementById("tripForm");
 // User has clicked 'Create Trip', send details to backend
 tripForm.addEventListener("submit", async (event) => {
     await tripService.createTrip(event);
+    await tripService.loadUserTripsAndName();
+    tripFormContainer.classList.add("hidden");
+    tripForm.reset();
 });
 
 // User switches between people and waypoints tab
