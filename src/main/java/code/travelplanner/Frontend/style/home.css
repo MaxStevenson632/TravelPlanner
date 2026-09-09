@@ -426,6 +426,44 @@ body {
     margin-top: 0.1rem;
 }
 
+/* ---------- Member / Viewer Role Button ---------- */
+.person-row button,
+.member-btn,
+.role-btn,
+button.person-role {
+    background: transparent;
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    padding: 0.22rem 0.65rem;
+    font-size: 0.78rem;
+    font-family: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
+    margin-top: 0.1rem;
+}
+
+.person-row button:hover,
+.person-row button:focus-visible,
+.member-btn:hover,
+.member-btn:focus-visible,
+.role-btn:hover,
+.role-btn:focus-visible,
+button.person-role:hover,
+button.person-role:focus-visible {
+    transform: scale(1.05);
+    border-color: var(--gold);
+    color: var(--text-main);
+    outline: none;
+}
+
 /* ---------- Sidebar footer ---------- */
 .sidebar-status {
     margin-top: auto;
