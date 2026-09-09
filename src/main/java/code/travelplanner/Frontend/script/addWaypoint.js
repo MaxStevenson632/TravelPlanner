@@ -3,6 +3,7 @@ import {API_BASE_URL} from './configuration.js'
 import {sanitizedHTML} from "./utils.js";
 import {renderTripWaypointsAndMembers} from "./sidebarRenderer.js";
 import { selectedPlaceState } from './Map/mapSearch.js';
+import { getMapData } from "./tripService.js";
 
 let tripId = null;
 let activeWaypointElement = null;
@@ -88,7 +89,7 @@ async function saveWaypointsToTrip(waypointData) {
         } else {
             console.log(response);
             // Render waypoints again
-            renderTripWaypointsAndMembers(tripId);
+            renderTripWaypointsAndMembers(await getMapData(tripId));
         }
     } catch (error) {
         console.log("Save failed", error);
