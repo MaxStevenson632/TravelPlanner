@@ -24,6 +24,8 @@ import code.travelplanner.Backend.waypoint.Entity.WaypointEntity;
 import code.travelplanner.Backend.waypoint.Repository.WaypointRepository;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -45,6 +47,7 @@ public class TripService {
     private final TripPlacesRepository  tripPlacesRepository;
     private final WaypointRepository  waypointRepository;
     private final CacheManager cacheManager;
+    private static final Logger log = LoggerFactory.getLogger(TripService.class);
 
     public TripService(TripRepository tripRepository,  TripMembersService tripMembersService,  UserRepository userRepository,
                        WaypointService waypointService, TripMembersRepository tripMembersRepository,
@@ -141,6 +144,8 @@ public class TripService {
     @Cacheable(value = "tripList", key = "#userId")
     public TripOverviewsListDto getTripOverviewsData(Long userId) {
 
+        long start = System.currentTimeMillis();
+
         List<TripMembersEntity> tripMembers = tripMembersRepository.findByIdUserId(userId);
         if (tripMembers.isEmpty()) {
             throw new UserNotFoundException("User not found");
@@ -164,6 +169,9 @@ public class TripService {
 
         TripOverviewsListDto tripDataList = new TripOverviewsListDto();
         tripDataList.setTripDataDto(tripDataDtos);
+
+        long duration = System.currentTimeMillis() - start;
+        log.info("CACHE MISS — getUserTrips userId={} took {}ms", userId, duration);
 
         return tripDataList;
     }
