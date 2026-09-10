@@ -7,6 +7,8 @@ import code.travelplanner.Backend.trip.Dto.TripOverviewsListDto;
 import code.travelplanner.Backend.trip.Service.TripService;
 import code.travelplanner.Backend.user.Repository.UserRepository;
 import code.travelplanner.Backend.waypoint.Service.WaypointService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 @RequestMapping("/travelplanner")
 @Controller
 public class TripController {
@@ -22,6 +26,7 @@ public class TripController {
     private final TripService tripService;
     private final WaypointService waypointService;
     private final UserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(TripController.class);
 
     @Autowired
     public TripController(TripService tripService,  WaypointService waypointService,  UserRepository userRepository) {
@@ -52,7 +57,14 @@ public class TripController {
     @GetMapping("/retrieve-trips")
     public ResponseEntity<TripOverviewsListDto> getTripData(@AuthenticationPrincipal long userId) {
 
-        return ResponseEntity.ok(tripService.getTripOverviewsData(userId));
+        long start = System.currentTimeMillis();
+
+        TripOverviewsListDto trips = tripService.getTripOverviewsData(userId);
+
+        long duration = System.currentTimeMillis() - start;
+        log.info("RESPONSE — retrieve-trips userId={} took {}ms", userId, duration);
+        
+        return ResponseEntity.ok(trips);
     }
 
     @DeleteMapping("/{tripId}/deleteTrip")
